@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useCallback } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useCallback } from "react";
 
 // They receive display values from parent form
 // onChange they update the state of parent, which in turn
@@ -42,16 +42,20 @@ export const SendInput = ({
   buying,
   setSendingCurrency,
   setSendingAmount,
+
   cryptoCurrencies,
   fiatCurrencies,
 }: ExchangeInput) => {
-  const debouncedSearch = useCallback(
-    debounce(async (value: string) => {
-      // async API service call here
-      // set parent state to async call result
-    }, 500),
-    []
-  );
+  // const debouncedSearch = useCallback(
+  //   debounce(async (value: number) => {
+  //     // async API service call here
+  //     // from, to , price (amount)
+  //     // set parent state to async call result
+
+  //     setSendingAmount(value);
+  //   }, 450),
+  //   []
+  // );
 
   let currencyOptions;
 
@@ -61,38 +65,41 @@ export const SendInput = ({
     currencyOptions = cryptoCurrencies;
   }
 
-  const handleChange = async () => {};
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setSendingAmount(value);
+  };
 
   const options = currencyOptions.map((currency, id) => (
-    <option key={id} className="p-2 text-black" value={currency.name}>
-      {currency.name}
+    <option key={id} className="p-2 text-black uppercase" value={currency}>
+      {currency}
     </option>
   ));
 
   return (
-    <div>
-      <label htmlFor="send">Envías</label>
-      <input
-        onChange={(e) => {
-          setSendingAmount(e.currentTarget.value);
-        }}
-        id="send"
-        type="number"
-        name="send"
-      />
-      <select
-        className="p-2 text-black"
-        onChange={(e) => {
-          const selectedCurrency = currencyOptions.find(
-            (currency) => currency.name == e.target.value
-          );
-          setSendingCurrency(selectedCurrency);
-        }}
-        name=""
-        id=""
-      >
-        {options}
-      </select>
+    <div className="flex flex-col gap-2">
+      <span>Envías</span>
+      <label htmlFor="send">
+        <input
+          className="text-black w-[300px] p-2 rounded m-1"
+          onChange={async (e) => {
+            handleChange(e);
+          }}
+          id="send"
+          type="number"
+          name="send"
+        />
+        <select
+          className="p-2 text-black -ml-6 rounded h-12 w-32 uppercase"
+          onChange={(e) => {
+            setSendingCurrency(e.target.value);
+          }}
+          name=""
+          id=""
+        >
+          {options}
+        </select>
+      </label>
     </div>
   );
 };
