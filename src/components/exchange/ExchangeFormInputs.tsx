@@ -32,7 +32,10 @@ type ExchangeInput = {
   buying: boolean;
   cryptoCurrencies: any[];
   fiatCurrencies: any[];
+  sending?: number;
   receive?: number;
+  sendCurrency?: string;
+  receivingCurrency?: string;
   setSendingCurrency: Dispatch<SetStateAction<any>>;
   setReceivingCurrency: Dispatch<SetStateAction<any>>;
   setSendingAmount: Dispatch<SetStateAction<any>>;
@@ -40,9 +43,10 @@ type ExchangeInput = {
 
 export const SendInput = ({
   buying,
+  sending,
   setSendingCurrency,
   setSendingAmount,
-
+  sendCurrency,
   cryptoCurrencies,
   fiatCurrencies,
 }: ExchangeInput) => {
@@ -71,77 +75,93 @@ export const SendInput = ({
   };
 
   const options = currencyOptions.map((currency, id) => (
-    <option key={id} className="p-2 text-black uppercase" value={currency}>
+    <option
+      key={id}
+      className="p-2 text-white uppercase bg-[#3e3e59]"
+      value={currency}
+    >
       {currency}
     </option>
   ));
 
   return (
     <div className="flex flex-col gap-2">
-      <span>Envías</span>
-      <label htmlFor="send">
-        <input
-          className="text-black w-[300px] p-2 rounded m-1"
-          onChange={async (e) => {
-            handleChange(e);
-          }}
-          id="send"
-          type="number"
-          name="send"
-        />
+      <h2>Envías</h2>
+      <div className="flex p-2 items-center rounded justify-center w-[400px] border-[1px] border-gray-600  bg-[#3e3e59]">
+        <label htmlFor="send">
+          <input
+            placeholder="0"
+            // value={sending}
+            className="text-white text-xl w-[275px] bg-[#3e3e59] h-12 p-2 rounded m-1"
+            onChange={async (e) => {
+              handleChange(e);
+            }}
+            id="send"
+            type="number"
+            name="send"
+          />
+        </label>
         <select
-          className="p-2 text-black -ml-6 rounded h-12 w-32 uppercase"
+          value={sendCurrency}
+          className="p-2 text-white text-xl bg-[#3e3e59]  rounded h-full w-20 uppercase"
           onChange={(e) => {
             setSendingCurrency(e.target.value);
           }}
-          name=""
-          id=""
+          name="send"
+          id="send"
         >
           {options}
         </select>
-      </label>
+      </div>
     </div>
   );
 };
 
-// export const ReceiveInput = ({
-//   buying,
-//   receive,
-//   setReceivingCurrency,
-//   setSendingAmount,
-//   cryptoCurrencies,
-//   fiatCurrencies,
-// }: ExchangeInput) => {
-//   let currencyOptions;
+export const ReceiveInput = ({
+  buying,
+  receive,
+  setReceivingCurrency,
+  setSendingAmount,
+  cryptoCurrencies,
+  fiatCurrencies,
+  receivingCurrency,
+}: ExchangeInput) => {
+  let currencyOptions;
 
-//   if (buying) {
-//     currencyOptions = fiatCurrencies;
-//   } else {
-//     currencyOptions = cryptoCurrencies;
-//   }
+  if (buying) {
+    currencyOptions = cryptoCurrencies;
+  } else {
+    currencyOptions = fiatCurrencies;
+  }
 
-//   const options = currencyOptions.map((currency, id) => (
-//     <option key={id} className="p-2 text-black" value={currency.name}>
-//       {currency.name}
-//     </option>
-//   ));
-//   return (
-//     <div className="text-white">
-//       <label htmlFor="">Recibes:</label>
-//       <div className="text-gray-200">{receive}</div>
-//       <select
-//         className="p-2 text-black"
-//         onChange={(e) => {
-//           const selectedCurrency = currencyOptions.find(
-//             (currency) => currency.name == e.target.value
-//           );
-//           setReceivingCurrency(selectedCurrency);
-//         }}
-//         name=""
-//         id=""
-//       >
-//         {options}
-//       </select>
-//     </div>
-//   );
-// };
+  const options = currencyOptions.map((currency, id) => (
+    <option
+      key={id}
+      className="p-2 text-white uppercase bg-[#3e3e59]"
+      value={currency}
+    >
+      {currency}
+    </option>
+  ));
+  return (
+    <div className="flex flex-col text-white gap-2">
+      <h2>Recibes</h2>
+      <div className="flex p-2 items-center rounded justify-center w-[400px] bg-[#3e3e59] border-[1px] border-gray-600">
+        <div className="text-white text-xl w-[275px] p-2 rounded m-1 bg-[#3e3e59]">
+          {receive}
+        </div>
+        <select
+          className="p-2 text-white text-xl bg-[#3e3e59]  rounded h-full w-20 uppercase"
+          onChange={(e) => {
+            e.preventDefault();
+            setReceivingCurrency(e.target.value);
+          }}
+          name="receive"
+          id="receive"
+        >
+          {options}
+        </select>
+      </div>
+    </div>
+  );
+};

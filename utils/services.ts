@@ -10,6 +10,7 @@ async function makeRequest(
     body,
     headers,
   });
+
   const data = await response.json();
   if (data.error && data.error === "no_data") return undefined;
   return data;
@@ -29,6 +30,15 @@ export async function calculateExchange(
   body.set("to", to);
   body.set("price", textPrice);
 
+  const response = await makeRequest(apiURL, apiSignature, body);
+
+  console.log(response);
+  return response;
+}
+
+export async function getConstants(apiURL: string, apiSignature: string) {
+  const body = new FormData();
+  body.set("getconstants", "true");
   const response = await makeRequest(apiURL, apiSignature, body);
 
   console.log(response);

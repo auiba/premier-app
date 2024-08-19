@@ -11,10 +11,9 @@ export async function POST(req: NextRequest) {
   if (!from || !to || !price) return NextResponse.error();
 
   try {
-    console.log("try calling service...");
+    console.log("try calling service AGAIN...");
     const data = await calculateExchange(apiUrl!, apiKey!, from, to, price);
 
-    console.log(data);
     return NextResponse.json(data);
   } catch (err) {
     console.log("ERROR NOOB");

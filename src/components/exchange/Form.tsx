@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { SendInput } from "./ExchangeFormInputs";
+import { SendInput, ReceiveInput } from "./ExchangeFormInputs";
 
 // "Parent" form component
 
@@ -23,12 +23,24 @@ function debounce<T extends (...args: any[]) => Promise<void>>(
   };
 }
 
-export const ExchangeForm = () => {
+export const ExchangeForm = ({
+  commission,
+  fee,
+}: {
+  commission: string;
+  fee: string;
+}) => {
   const [sendingAmount, setSendingAmount] = useState(0);
   const [sendCurrency, setSendCurrency] = useState<string>("usd");
   const [receiveAmount, setReceiveAmount] = useState(0);
-  const [receivingCurrency, setReceivingCurrecy] = useState("");
-  const [buying, setBuying] = useState<boolean>(false);
+  const [receivingCurrency, setReceivingCurrency] = useState("btc");
+  const [buying, setBuying] = useState<boolean>(true);
+
+  const flipCurrencies = () => {
+    setSendingAmount(0);
+    setSendCurrency(receivingCurrency);
+    setReceivingCurrency(sendCurrency);
+  };
 
   const debouncedSearch = useCallback(
     debounce(async (value: number) => {
@@ -53,29 +65,39 @@ export const ExchangeForm = () => {
   );
 
   useEffect(() => {
-    debouncedSearch(sendingAmount);
-  }, []);
+    // debouncedSearch(sendingAmount);
+  }, [sendingAmount]);
 
-  console.log("currency", sendCurrency);
-  console.log("Amount", sendingAmount);
+  console.log(commission, fee);
+  console.log("receiving currency", receivingCurrency);
+  console.log("send", sendCurrency);
 
-  const fiatOptions = ["ars", "usd"];
+  const fiatOptions = ["usd", "ars"];
   const cryptoOptions = ["btc", "eth"];
 
   return (
-    <form className="text-white flex flex-col" action="">
+    <form
+      className="text-white flex flex-col bg-[#343443] p-8 rounded border-[1px] border-gray-600"
+      action=""
+    >
       <SendInput
         buying={buying}
+        sending={sendingAmount}
         cryptoCurrencies={cryptoOptions}
         fiatCurrencies={fiatOptions}
-        setReceivingCurrency={setReceivingCurrecy}
+        setReceivingCurrency={setReceivingCurrency}
         setSendingAmount={setSendingAmount}
         setSendingCurrency={setSendCurrency}
       />
+      <div className="flex items-center justify-center"></div>
+      <div></div>
+
+      <div></div>
 
       <button
         onClick={(e) => {
           e.preventDefault();
+          flipCurrencies();
           setBuying(false);
         }}
       >
@@ -84,22 +106,22 @@ export const ExchangeForm = () => {
       <button
         onClick={(e) => {
           e.preventDefault();
+          flipCurrencies();
           setBuying(true);
         }}
       >
         comprar
       </button>
-      <span>RECIBES:</span>
-      {receiveAmount}
-      {/* <ReceiveInput
-        receive={receiving}
+      <ReceiveInput
+        receive={receiveAmount}
         buying={buying}
         cryptoCurrencies={cryptoOptions}
         fiatCurrencies={fiatOptions}
-        setReceivingCurrency={setReceiving}
+        receivingCurrency={receivingCurrency}
+        setReceivingCurrency={setReceivingCurrency}
         setSendingAmount={setSendingAmount}
         setSendingCurrency={setSendCurrency}
-      /> */}
+      />
     </form>
   );
 };
