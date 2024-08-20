@@ -85,7 +85,7 @@ export const ExchangeForm = ({
         // console.log(data.result);
         setReceiveAmount(data.result);
       },
-      150
+      0
     ),
 
     []
