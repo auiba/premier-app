@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { SendInput, ReceiveInput } from "./ExchangeFormInputs";
 
 // "Parent" form component
@@ -36,6 +36,7 @@ export const ExchangeForm = ({
   const [sendCurrency, setSendCurrency] = useState<string>("usd");
   const [receiveAmount, setReceiveAmount] = useState(0);
   const [receivingCurrency, setReceivingCurrency] = useState("btc");
+  const [account, setAccount] = useState<string>("");
   const [buying, setBuying] = useState<boolean>(true);
   const [cash, setCash] = useState<boolean>(false);
 
@@ -89,12 +90,12 @@ export const ExchangeForm = ({
     debouncedSearch(sendCurrency, receivingCurrency, sendingAmount);
   }, [sendingAmount]);
 
-  console.log(commission, fee);
-  console.log("receiving currency", receivingCurrency);
-  console.log("send", sendCurrency);
+  console.log("cash", cash);
 
   const fiatOptions = ["usd", "ars"];
   const cryptoOptions = ["btc", "eth"];
+
+  const cashRef = useRef<HTMLInputElement>(null);
 
   return (
     <form
@@ -186,13 +187,48 @@ export const ExchangeForm = ({
         />
       </label>
 
+      <label
+        className={`${cash ? "opacity-10" : ""}  flex flex-col mt-4`}
+        htmlFor="account"
+      >
+        CBU/CVU/Alias para transferencia
+        <input
+          disabled={cash}
+          placeholder="0000079600000000000017"
+          className="w-[350px] rounded h-10 p-2 bg-[#3e3e59]"
+          id="account"
+          name="account"
+          type="text"
+          onChange={(e) => {
+            setAccount(e.target.value);
+          }}
+        />
+      </label>
+
+      <label
+        className="flex items-center justify-center self-start gap-2 my-4"
+        htmlFor="cash"
+      >
+        <input
+          ref={cashRef}
+          className="h-8 w-8 rounded"
+          type="checkbox"
+          name="cash"
+          id="cash"
+          onChange={(e) => {
+            setCash(e.target.checked);
+          }}
+        />
+        Efectivo
+      </label>
+
       <button
         className="flex w-full items-center text-lg justify-center text-center rounded p-4 h-12 font-medium bg-[#00c26f] mt-4"
         onClick={(e) => {
           e.preventDefault();
         }}
       >
-        {buying ? "Comprar" : "Vender"}{" "}
+        {buying ? "Comprar" : "Vender"}
       </button>
     </form>
   );
