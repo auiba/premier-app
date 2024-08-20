@@ -6,7 +6,7 @@ export const DollarPrice = ({
   venta: number;
 }) => {
   return (
-    <div className="flex w-[400px] px-4 items-center justify-between  p-2 rounded bg-[#3e3e59] mt-4">
+    <div className="flex w-[375px] px-4 items-center justify-between  p-2 rounded bg-[#3e3e59] mt-4">
       <span>USD/ARS</span>
       <div className="flex gap-4 items-center justify-center">
         <div className="flex flex-col text-xl items-center justify-center">

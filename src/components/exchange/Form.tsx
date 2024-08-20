@@ -103,7 +103,7 @@ export const ExchangeForm = ({
 
   return (
     <form
-      className="text-white items-center justify-center flex flex-col w-[400px] bg-[#343443] p-8 rounded border-[1px] border-gray-600"
+      className="text-white items-center justify-center flex flex-col w-[375px] bg-[#343443] p-8 rounded border-[1px] border-gray-600"
       action=""
     >
       <SendInput
@@ -116,8 +116,8 @@ export const ExchangeForm = ({
         setSendingCurrency={setSendCurrency}
       />
       <div className="flex items-center justify-between w-full py-4">
-        <div>
-          <ul className="text-sm ml-4">
+        <div className="-ml-2">
+          <ul className="text-[12px]">
             <li>Comisión: {commission}%</li>
             <li>Cargo: {fee} USD</li>
           </ul>

@@ -20,7 +20,7 @@ export default async function ExchangePage() {
 
   console.log(dollarPrice);
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between bg-[#2b2b36] p-24">
+    <main className="flex min-h-screen flex-col w-full items-center justify-between  bg-[#2b2b36] p-24">
       <ExchangeForm {...constants} {...dollarPrice} />
       <DollarPrice compra={dollarPrice.compra} venta={dollarPrice.venta} />
     </main>
