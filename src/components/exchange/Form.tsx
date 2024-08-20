@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, useRef } from "react";
 import { SendInput, ReceiveInput } from "./ExchangeFormInputs";
+import { useRouter } from "next/navigation";
 
 // "Parent" form component
 
@@ -36,16 +37,21 @@ export const ExchangeForm = ({
   const [sendCurrency, setSendCurrency] = useState<string>("usd");
   const [receiveAmount, setReceiveAmount] = useState(0);
   const [receivingCurrency, setReceivingCurrency] = useState("btc");
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
   const [account, setAccount] = useState<string>("");
   const [buying, setBuying] = useState<boolean>(true);
   const [cash, setCash] = useState<boolean>(false);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    account: "",
-  });
+  const router = useRouter();
+
+  // const [formData, setFormData] = useState({
+  //   name: "",
+  //   email: "",
+  //   phone: "",
+  //   account: "",
+  // });
 
   // Agregar cotizacion de dolar y calcular cargo dependiendo de USD o ARS
   // Email a guille
@@ -79,7 +85,7 @@ export const ExchangeForm = ({
         console.log(data.result);
         setReceiveAmount(data.result);
       },
-      450
+      150
     ),
 
     []
@@ -159,6 +165,7 @@ export const ExchangeForm = ({
       <label className="flex flex-col mt-4" htmlFor="name">
         Nombre y apellido *
         <input
+          onChange={(e) => setName(e.target.value)}
           placeholder="Pablo Perez"
           className="w-[350px] rounded h-10 p-2 bg-[#3e3e59]"
           id="name"
@@ -169,6 +176,7 @@ export const ExchangeForm = ({
       <label className="flex flex-col mt-4" htmlFor="email">
         Correo Electrónico *
         <input
+          onChange={(e) => setEmail(e.target.value)}
           placeholder="pablo@gmail.com"
           className="w-[350px] rounded h-10 p-2 bg-[#3e3e59]"
           id="email"
@@ -179,6 +187,7 @@ export const ExchangeForm = ({
       <label className="flex flex-col mt-4" htmlFor="phone">
         Número de WhatsApp *
         <input
+          onChange={(e) => setPhone(e.target.value)}
           placeholder="+5496319426789"
           className="w-[350px] rounded h-10 p-2 bg-[#3e3e59]"
           id="phone"
@@ -224,8 +233,24 @@ export const ExchangeForm = ({
 
       <button
         className="flex w-full items-center text-lg justify-center text-center rounded p-4 h-12 font-medium bg-[#00c26f] mt-4"
-        onClick={(e) => {
+        onClick={async (e) => {
           e.preventDefault();
+          const response = await fetch("/api/createurl", {
+            method: "POST",
+            body: JSON.stringify({
+              from: sendCurrency,
+              to: receivingCurrency,
+              price: sendingAmount,
+              name: name,
+              email: email,
+              bankstring: account,
+            }),
+          });
+
+          const data = await response
+            .json()
+            .then((urlData) => router.push(urlData.url));
+          console.log(data);
         }}
       >
         {buying ? "Comprar" : "Vender"}

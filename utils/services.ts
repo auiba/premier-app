@@ -52,3 +52,29 @@ export async function getDollar(apiURL: string, apiSignature: string) {
 
   return response;
 }
+
+export async function createUrl(
+  apiURL: string,
+  apiSignature: string,
+  from: string,
+  to: string,
+  price: number,
+  name: string,
+  email: string,
+  bankstring: string
+) {
+  const textPrice = price.toString();
+  const body = new FormData();
+  body.set("createurl", "true");
+  body.set("from", from);
+  body.set("to", to);
+  body.set("price", textPrice);
+  body.set("name", name);
+  body.set("email", email);
+  body.set("bankstring", bankstring);
+
+  const response = await makeRequest(apiURL, apiSignature, body);
+  console.log("creaturl response =>", response);
+
+  return response;
+}
