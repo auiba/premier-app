@@ -165,7 +165,7 @@ export const ExchangeForm = ({
         <input
           onChange={(e) => setName(e.target.value)}
           placeholder="Pablo Perez"
-          className="w-[350px] rounded h-10 p-2 bg-[#3e3e59]"
+          className="w-[325px] rounded h-10 p-2 bg-[#3e3e59]"
           id="name"
           name="name"
           type="text"
@@ -176,7 +176,7 @@ export const ExchangeForm = ({
         <input
           onChange={(e) => setEmail(e.target.value)}
           placeholder="pablo@gmail.com"
-          className="w-[350px] rounded h-10 p-2 bg-[#3e3e59]"
+          className="w-[325px] rounded h-10 p-2 bg-[#3e3e59]"
           id="email"
           name="email"
           type="email"
@@ -187,7 +187,7 @@ export const ExchangeForm = ({
         <input
           onChange={(e) => setPhone(e.target.value)}
           placeholder="+5496319426789"
-          className="w-[350px] rounded h-10 p-2 bg-[#3e3e59]"
+          className="w-[325px] rounded h-10 p-2 bg-[#3e3e59]"
           id="phone"
           name="phone"
           type="number"
@@ -202,7 +202,7 @@ export const ExchangeForm = ({
         <input
           disabled={cash}
           placeholder="0000079600000000000017"
-          className="w-[350px] rounded h-10 p-2 bg-[#3e3e59]"
+          className="w-[325px] rounded h-10 p-2 bg-[#3e3e59]"
           id="account"
           name="account"
           type="text"
