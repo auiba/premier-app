@@ -82,7 +82,7 @@ export const ExchangeForm = ({
         });
 
         const data = await response.json();
-        console.log(data.result);
+        // console.log(data.result);
         setReceiveAmount(data.result);
       },
       150
@@ -95,8 +95,6 @@ export const ExchangeForm = ({
     if (sendingAmount == 0) return;
     debouncedSearch(sendCurrency, receivingCurrency, sendingAmount);
   }, [sendingAmount]);
-
-  console.log("cash", cash);
 
   const fiatOptions = ["usd", "ars"];
   const cryptoOptions = ["btc", "eth"];
@@ -250,7 +248,6 @@ export const ExchangeForm = ({
           const data = await response
             .json()
             .then((urlData) => router.push(urlData.url));
-          console.log(data);
         }}
       >
         {buying ? "Comprar" : "Vender"}
