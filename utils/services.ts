@@ -44,3 +44,11 @@ export async function getConstants(apiURL: string, apiSignature: string) {
   console.log(response);
   return response;
 }
+
+export async function getDollar(apiURL: string, apiSignature: string) {
+  const body = new FormData();
+  body.set("getdollar", "true");
+  const response = await makeRequest(apiURL, apiSignature, body);
+
+  return response;
+}

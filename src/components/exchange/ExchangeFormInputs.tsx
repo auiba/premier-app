@@ -86,8 +86,8 @@ export const SendInput = ({
 
   return (
     <div className="flex flex-col gap-2">
-      <h2>Envías</h2>
-      <div className="flex p-2 items-center rounded justify-center w-[400px] border-[1px] border-gray-600  bg-[#3e3e59]">
+      <h2 className="text-gray-400">Envías</h2>
+      <div className="flex p-2 items-center rounded justify-center w-[375px] border-[1px] border-gray-600  bg-[#3e3e59]">
         <label htmlFor="send">
           <input
             placeholder="0"
@@ -145,8 +145,8 @@ export const ReceiveInput = ({
   ));
   return (
     <div className="flex flex-col text-white gap-2">
-      <h2>Recibes</h2>
-      <div className="flex p-2 items-center rounded justify-center w-[400px] bg-[#3e3e59] border-[1px] border-gray-600">
+      <h2 className="text-gray-400">Recibes</h2>
+      <div className="flex p-2 items-center rounded justify-center w-[375px] bg-[#3e3e59] border-[1px] border-gray-600">
         <div className="text-white text-xl w-[275px] p-2 rounded m-1 bg-[#3e3e59]">
           {receive}
         </div>

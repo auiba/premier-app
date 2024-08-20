@@ -26,16 +26,28 @@ function debounce<T extends (...args: any[]) => Promise<void>>(
 export const ExchangeForm = ({
   commission,
   fee,
+  dollarPrice,
 }: {
   commission: string;
   fee: string;
+  dollarPrice: { compra: number; venta: number };
 }) => {
   const [sendingAmount, setSendingAmount] = useState(0);
   const [sendCurrency, setSendCurrency] = useState<string>("usd");
   const [receiveAmount, setReceiveAmount] = useState(0);
   const [receivingCurrency, setReceivingCurrency] = useState("btc");
   const [buying, setBuying] = useState<boolean>(true);
+  const [cash, setCash] = useState<boolean>(false);
 
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    account: "",
+  });
+
+  // Agregar cotizacion de dolar y calcular cargo dependiendo de USD o ARS
+  // Email a guille
   const flipCurrencies = () => {
     setSendingAmount(0);
     setSendCurrency(receivingCurrency);
@@ -43,29 +55,38 @@ export const ExchangeForm = ({
   };
 
   const debouncedSearch = useCallback(
-    debounce(async (value: number) => {
-      // async API service call here
-      // from, to , price (amount)
-      // set parent state to async call result
+    debounce(
+      async (
+        sendCurrency: string,
+        receivingCurrency: string,
+        value: number
+      ) => {
+        // async API service call here
+        // from, to , price (amount)
+        // set parent state to async call result
 
-      const response = await fetch("/api/calculate", {
-        method: "POST",
-        body: JSON.stringify({
-          from: sendCurrency,
-          to: "btc",
-          price: 1500,
-        }),
-      });
+        const response = await fetch("/api/calculate", {
+          method: "POST",
+          body: JSON.stringify({
+            from: sendCurrency,
+            to: receivingCurrency,
+            price: value,
+          }),
+        });
 
-      console.log(response);
-      // setReceiveAmount(response)
-    }, 450),
+        const data = await response.json();
+        console.log(data.result);
+        setReceiveAmount(data.result);
+      },
+      450
+    ),
 
     []
   );
 
   useEffect(() => {
-    // debouncedSearch(sendingAmount);
+    if (sendingAmount == 0) return;
+    debouncedSearch(sendCurrency, receivingCurrency, sendingAmount);
   }, [sendingAmount]);
 
   console.log(commission, fee);
@@ -77,7 +98,7 @@ export const ExchangeForm = ({
 
   return (
     <form
-      className="text-white flex flex-col bg-[#343443] p-8 rounded border-[1px] border-gray-600"
+      className="text-white items-center justify-center flex flex-col w-[400px] bg-[#343443] p-8 rounded border-[1px] border-gray-600"
       action=""
     >
       <SendInput
@@ -89,29 +110,41 @@ export const ExchangeForm = ({
         setSendingAmount={setSendingAmount}
         setSendingCurrency={setSendCurrency}
       />
-      <div className="flex items-center justify-center"></div>
-      <div></div>
+      <div className="flex items-center justify-between w-full py-4">
+        <div>
+          <ul className="text-sm ml-4">
+            <li>Comisión: {commission}%</li>
+            <li>Cargo: {fee} USD</li>
+          </ul>
+        </div>
 
-      <div></div>
-
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          flipCurrencies();
-          setBuying(false);
-        }}
-      >
-        vender
-      </button>
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          flipCurrencies();
-          setBuying(true);
-        }}
-      >
-        comprar
-      </button>
+        <div className="flex gap-2 bg-[#30303e] p-1 rounded">
+          <button
+            className={`${
+              buying ? "text-gray-400" : "text-[#0ca66a] bg-[#3e3f57]"
+            } rounded p-1 font-medium`}
+            onClick={(e) => {
+              e.preventDefault();
+              flipCurrencies();
+              setBuying(false);
+            }}
+          >
+            Vender
+          </button>
+          <button
+            className={`${
+              buying ? "text-[#0ca66a] bg-[#3e3f57]" : "text-gray-400"
+            } rounded p-1 font-medium`}
+            onClick={(e) => {
+              e.preventDefault();
+              flipCurrencies();
+              setBuying(true);
+            }}
+          >
+            Comprar
+          </button>
+        </div>
+      </div>
       <ReceiveInput
         receive={receiveAmount}
         buying={buying}
@@ -122,6 +155,45 @@ export const ExchangeForm = ({
         setSendingAmount={setSendingAmount}
         setSendingCurrency={setSendCurrency}
       />
+      <label className="flex flex-col mt-4" htmlFor="name">
+        Nombre y apellido *
+        <input
+          placeholder="Pablo Perez"
+          className="w-[350px] rounded h-10 p-2 bg-[#3e3e59]"
+          id="name"
+          name="name"
+          type="text"
+        />
+      </label>
+      <label className="flex flex-col mt-4" htmlFor="email">
+        Correo Electrónico *
+        <input
+          placeholder="pablo@gmail.com"
+          className="w-[350px] rounded h-10 p-2 bg-[#3e3e59]"
+          id="email"
+          name="email"
+          type="email"
+        />
+      </label>
+      <label className="flex flex-col mt-4" htmlFor="phone">
+        Número de WhatsApp *
+        <input
+          placeholder="+5496319426789"
+          className="w-[350px] rounded h-10 p-2 bg-[#3e3e59]"
+          id="phone"
+          name="phone"
+          type="number"
+        />
+      </label>
+
+      <button
+        className="flex w-full items-center text-lg justify-center text-center rounded p-4 h-12 font-medium bg-[#00c26f] mt-4"
+        onClick={(e) => {
+          e.preventDefault();
+        }}
+      >
+        {buying ? "Comprar" : "Vender"}{" "}
+      </button>
     </form>
   );
 };
