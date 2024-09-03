@@ -55,6 +55,10 @@ export const ExchangeForm = ({
 
   // Agregar cotizacion de dolar y calcular cargo dependiendo de USD o ARS
   // Email a guille
+
+  console.log("comision", commission);
+  console.log("fee", fee);
+
   const flipCurrencies = () => {
     setSendingAmount("");
     setReceiveAmount(0);
@@ -199,7 +203,7 @@ export const ExchangeForm = ({
         className={`${cash ? "opacity-10" : ""}  flex flex-col mt-4`}
         htmlFor="account"
       >
-        {buying ? "Billetera de crypto" : "CBU/CVU/Alias para transferencia"}
+        {buying ? "Mi billetera de crypto" : "CBU/CVU/Alias para transferencia"}
 
         <input
           disabled={cash}
