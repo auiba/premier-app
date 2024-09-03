@@ -33,7 +33,7 @@ export const ExchangeForm = ({
   fee: string;
   dollarPrice: { compra: number; venta: number };
 }) => {
-  const [sendingAmount, setSendingAmount] = useState(0);
+  const [sendingAmount, setSendingAmount] = useState<number | "">("");
   const [sendCurrency, setSendCurrency] = useState<string>("usd");
   const [receiveAmount, setReceiveAmount] = useState(0);
   const [receivingCurrency, setReceivingCurrency] = useState("btc");
@@ -56,7 +56,8 @@ export const ExchangeForm = ({
   // Agregar cotizacion de dolar y calcular cargo dependiendo de USD o ARS
   // Email a guille
   const flipCurrencies = () => {
-    setSendingAmount(0);
+    setSendingAmount("");
+    setReceiveAmount(0);
     setSendCurrency(receivingCurrency);
     setReceivingCurrency(sendCurrency);
   };
@@ -93,7 +94,7 @@ export const ExchangeForm = ({
 
   useEffect(() => {
     if (sendingAmount == 0) return;
-    debouncedSearch(sendCurrency, receivingCurrency, sendingAmount);
+    debouncedSearch(sendCurrency, receivingCurrency, sendingAmount as number);
   }, [sendingAmount]);
 
   const fiatOptions = ["usd", "ars"];
@@ -108,7 +109,7 @@ export const ExchangeForm = ({
     >
       <SendInput
         buying={buying}
-        sending={sendingAmount}
+        sending={sendingAmount as number}
         cryptoCurrencies={cryptoOptions}
         fiatCurrencies={fiatOptions}
         setReceivingCurrency={setReceivingCurrency}

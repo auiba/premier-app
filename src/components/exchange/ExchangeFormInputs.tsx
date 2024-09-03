@@ -90,6 +90,7 @@ export const SendInput = ({
       <div className="flex py-2 items-center rounded justify-center w-[325px] border-[1px] h-16 border-gray-600  bg-[#3e3e59]">
         <label htmlFor="send">
           <input
+            value={sending}
             placeholder="0"
             // value={sending}
             className="text-white text-xl w-[225px] bg-[#3e3e59] h-10 p-2 rounded m-1"
