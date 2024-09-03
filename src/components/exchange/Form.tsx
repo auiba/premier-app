@@ -119,7 +119,7 @@ export const ExchangeForm = ({
         <div className="-ml-2">
           <ul className="text-[12px]">
             <li>Comisión: {commission}%</li>
-            <li>Cargo: {fee} USD</li>
+            <li>Fee de red: {fee} USD</li>
           </ul>
         </div>
 
@@ -242,6 +242,7 @@ export const ExchangeForm = ({
               name: name,
               email: email,
               bankstring: account,
+              phone: phone,
             }),
           });
 

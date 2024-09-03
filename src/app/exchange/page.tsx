@@ -16,6 +16,8 @@ export default async function ExchangePage() {
   const constants =
     constantsResult.status == "fulfilled" && constantsResult.value;
 
+  // console.log(constants);
+
   const dollarPrice = dollarResult.status == "fulfilled" && dollarResult.value;
 
   console.log(dollarPrice);

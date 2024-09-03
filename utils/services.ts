@@ -61,7 +61,8 @@ export async function createUrl(
   price: number,
   name: string,
   email: string,
-  bankstring: string
+  bankstring: string,
+  whatsapp: string
 ) {
   const textPrice = price.toString();
   const body = new FormData();
@@ -72,6 +73,7 @@ export async function createUrl(
   body.set("name", name);
   body.set("email", email);
   body.set("bankstring", bankstring);
+  body.set("whatsapp", whatsapp);
 
   const response = await makeRequest(apiURL, apiSignature, body);
   console.log("creaturl response =>", response);
