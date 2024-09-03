@@ -198,7 +198,8 @@ export const ExchangeForm = ({
         className={`${cash ? "opacity-10" : ""}  flex flex-col mt-4`}
         htmlFor="account"
       >
-        CBU/CVU/Alias para transferencia
+        {buying ? "Billetera de crypto" : "CBU/CVU/Alias para transferencia"}
+
         <input
           disabled={cash}
           placeholder="0000079600000000000017"
@@ -211,23 +212,24 @@ export const ExchangeForm = ({
           }}
         />
       </label>
-
-      <label
-        className="flex items-center justify-center self-start gap-2 my-4"
-        htmlFor="cash"
-      >
-        <input
-          ref={cashRef}
-          className="h-8 w-8 rounded"
-          type="checkbox"
-          name="cash"
-          id="cash"
-          onChange={(e) => {
-            setCash(e.target.checked);
-          }}
-        />
-        Efectivo
-      </label>
+      {!buying && (
+        <label
+          className="flex items-center justify-center self-start gap-2 my-4"
+          htmlFor="cash"
+        >
+          <input
+            ref={cashRef}
+            className="h-8 w-8 rounded"
+            type="checkbox"
+            name="cash"
+            id="cash"
+            onChange={(e) => {
+              setCash(e.target.checked);
+            }}
+          />
+          Efectivo
+        </label>
+      )}
 
       <button
         className="flex w-full items-center text-lg justify-center text-center rounded p-4 h-12 font-medium bg-[#00c26f] mt-4"
