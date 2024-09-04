@@ -16,7 +16,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(data);
   } catch (err) {
-    console.log("ERROR NOOB");
     console.error("error calculating exchange", err);
     return NextResponse.error();
   }

@@ -56,8 +56,15 @@ export const ExchangeForm = ({
   // Agregar cotizacion de dolar y calcular cargo dependiendo de USD o ARS
   // Email a guille
 
-  console.log("comision", commission);
-  console.log("fee", fee);
+  useEffect(() => {
+    const getdata = async () => {
+      const constants = await fetch("/api/constants", { method: "GET" });
+      const formdetails = await constants.json();
+      console.log(formdetails);
+    };
+
+    getdata();
+  }, []);
 
   const flipCurrencies = () => {
     setSendingAmount("");

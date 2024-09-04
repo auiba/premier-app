@@ -9,6 +9,7 @@ async function makeRequest(
     method: "POST",
     body,
     headers,
+    cache: "no-store",
   });
 
   const data = await response.json();

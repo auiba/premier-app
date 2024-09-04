@@ -50,17 +50,6 @@ export const SendInput = ({
   cryptoCurrencies,
   fiatCurrencies,
 }: ExchangeInput) => {
-  // const debouncedSearch = useCallback(
-  //   debounce(async (value: number) => {
-  //     // async API service call here
-  //     // from, to , price (amount)
-  //     // set parent state to async call result
-
-  //     setSendingAmount(value);
-  //   }, 450),
-  //   []
-  // );
-
   let currencyOptions;
 
   if (buying) {
