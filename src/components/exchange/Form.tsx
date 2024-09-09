@@ -46,16 +46,6 @@ export const ExchangeForm = ({
 
   const router = useRouter();
 
-  // const [formData, setFormData] = useState({
-  //   name: "",
-  //   email: "",
-  //   phone: "",
-  //   account: "",
-  // });
-
-  // Agregar cotizacion de dolar y calcular cargo dependiendo de USD o ARS
-  // Email a guille
-
   const flipCurrencies = () => {
     setSendingAmount("");
     setReceiveAmount(0);
@@ -107,6 +97,7 @@ export const ExchangeForm = ({
     <form
       className="text-white items-center justify-center flex flex-col w-[375px] bg-[#343443] p-8 rounded border-[1px] border-gray-600"
       action=""
+      onSubmit={(e) => e.preventDefault()}
     >
       <SendInput
         buying={buying}
@@ -166,6 +157,7 @@ export const ExchangeForm = ({
         Nombre y apellido *
         <input
           onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && e.preventDefault()} // Prevent form submit on Enter
           placeholder="Pablo Perez"
           className="w-[325px] rounded h-10 p-2 bg-[#3e3e59]"
           id="name"
@@ -176,6 +168,7 @@ export const ExchangeForm = ({
       <label className="flex flex-col mt-4" htmlFor="email">
         Correo Electrónico *
         <input
+          onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="pablo@gmail.com"
           className="w-[325px] rounded h-10 p-2 bg-[#3e3e59]"
@@ -187,6 +180,7 @@ export const ExchangeForm = ({
       <label className="flex flex-col mt-4" htmlFor="phone">
         Número de WhatsApp *
         <input
+          onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
           onChange={(e) => setPhone(e.target.value)}
           placeholder="+5496319426789"
           className="w-[325px] rounded h-10 p-2 bg-[#3e3e59]"
@@ -203,6 +197,7 @@ export const ExchangeForm = ({
         {buying ? "Mi billetera de crypto" : "CBU/CVU/Alias para transferencia"}
 
         <input
+          onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
           disabled={cash}
           placeholder="0000079600000000000017"
           className="w-[325px] rounded h-10 p-2 bg-[#3e3e59]"
@@ -220,6 +215,7 @@ export const ExchangeForm = ({
           htmlFor="cash"
         >
           <input
+            onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
             ref={cashRef}
             className="h-8 w-8 rounded"
             type="checkbox"

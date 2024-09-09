@@ -79,11 +79,13 @@ export const SendInput = ({
       <div className="flex py-2 items-center rounded justify-center w-[325px] border-[1px] h-16 border-gray-600  bg-[#3e3e59]">
         <label htmlFor="send">
           <input
-            value={sending}
+            value={sending! > 0 ? sending : ""}
             placeholder="0"
+            onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
             // value={sending}
             className="text-white text-xl w-[225px] bg-[#3e3e59] h-10 p-2 rounded m-1"
             onChange={async (e) => {
+              e.preventDefault();
               handleChange(e);
             }}
             id="send"
@@ -95,6 +97,7 @@ export const SendInput = ({
           value={sendCurrency}
           className="p-2 text-white text-xl bg-[#36324a] border-[1px] rounded border-gray-600  h-16 w-24 uppercase"
           onChange={(e) => {
+            e.preventDefault();
             setSendingCurrency(e.target.value);
           }}
           name="send"
