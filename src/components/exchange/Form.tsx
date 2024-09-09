@@ -83,6 +83,9 @@ export const ExchangeForm = ({
     []
   );
 
+  console.log(phone);
+  console.log(name);
+
   useEffect(() => {
     if (sendingAmount == 0) return;
     debouncedSearch(sendCurrency, receivingCurrency, sendingAmount as number);
@@ -163,6 +166,7 @@ export const ExchangeForm = ({
           id="name"
           name="name"
           type="text"
+          value={name !== "" ? name : ""}
         />
       </label>
       <label className="flex flex-col mt-4" htmlFor="email">
@@ -175,6 +179,7 @@ export const ExchangeForm = ({
           id="email"
           name="email"
           type="email"
+          value={email !== "" ? email : ""}
         />
       </label>
       <label className="flex flex-col mt-4" htmlFor="phone">
@@ -187,6 +192,7 @@ export const ExchangeForm = ({
           id="phone"
           name="phone"
           type="number"
+          value={phone! !== "" ? phone : ""}
         />
       </label>
 
@@ -204,6 +210,7 @@ export const ExchangeForm = ({
           id="account"
           name="account"
           type="text"
+          value={account !== "" ? account : ""}
           onChange={(e) => {
             setAccount(e.target.value);
           }}
