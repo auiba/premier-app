@@ -79,7 +79,9 @@ export const SendInput = ({
       <div className="flex py-2 items-center rounded justify-center w-[325px] border-[1px] h-16 border-gray-600  bg-[#3e3e59]">
         <label htmlFor="send">
           <input
-            value={sending! > 0 ? sending : ""}
+            min={0}
+            step={"any"}
+            value={sending! > 0 ? sending : undefined}
             placeholder="0"
             onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
             // value={sending}

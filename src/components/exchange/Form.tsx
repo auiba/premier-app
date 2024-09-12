@@ -83,9 +83,6 @@ export const ExchangeForm = ({
     []
   );
 
-  console.log(phone);
-  console.log(name);
-
   useEffect(() => {
     if (sendingAmount == 0) return;
     debouncedSearch(sendCurrency, receivingCurrency, sendingAmount as number);
