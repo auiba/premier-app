@@ -47,6 +47,10 @@ export const ExchangeForm = ({
 
   console.log(`from: ${sendCurrency}`, `to: ${receivingCurrency}`);
 
+  const selectedCurrency = buying
+    ? cryptos?.find((crypto) => crypto.name == receivingCurrency)
+    : cryptos?.find((crypto) => crypto.name == sendCurrency);
+
   const flipCurrencies = () => {
     setSendingAmount("");
     setReceiveAmount(0);
@@ -118,8 +122,12 @@ export const ExchangeForm = ({
       <div className="flex items-center justify-between w-full py-4">
         <div className="-ml-2">
           <ul className="text-[12px]">
-            <li>Comisión: {}%</li>
-            {buying ? <li>Fee de red: {} USD</li> : <li>Fee de red: 0</li>}
+            <li>Comisión: {selectedCurrency?.comm}%</li>
+            {buying ? (
+              <li>Fee de red: {selectedCurrency?.fee} USD</li>
+            ) : (
+              <li>Fee de red: 0</li>
+            )}
           </ul>
         </div>
 
