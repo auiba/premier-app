@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import { SendInput, ReceiveInput } from "./ExchangeFormInputs";
 import { useRouter } from "next/navigation";
+import { Crypto } from "../../../utils/types";
 
 // "Parent" form component
 
@@ -25,13 +26,11 @@ function debounce<T extends (...args: any[]) => Promise<void>>(
 }
 
 export const ExchangeForm = ({
-  commission,
-  fee,
   dollarPrice,
+  cryptos,
 }: {
-  commission: string;
-  fee: string;
   dollarPrice: { compra: number; venta: number };
+  cryptos?: Crypto[];
 }) => {
   const [sendingAmount, setSendingAmount] = useState<number | "">("");
   const [sendCurrency, setSendCurrency] = useState<string>("usd");
@@ -46,11 +45,18 @@ export const ExchangeForm = ({
 
   const router = useRouter();
 
+  console.log(`from: ${sendCurrency}`, `to: ${receivingCurrency}`);
+
   const flipCurrencies = () => {
     setSendingAmount("");
     setReceiveAmount(0);
     setSendCurrency(receivingCurrency);
     setReceivingCurrency(sendCurrency);
+  };
+
+  const resetAmount = () => {
+    setSendingAmount("");
+    setReceiveAmount(0);
   };
 
   const debouncedSearch = useCallback(
@@ -77,7 +83,7 @@ export const ExchangeForm = ({
         // console.log(data.result);
         setReceiveAmount(data.result);
       },
-      0
+      100
     ),
 
     []
@@ -89,7 +95,7 @@ export const ExchangeForm = ({
   }, [sendingAmount]);
 
   const fiatOptions = ["usd", "ars"];
-  const cryptoOptions = ["btc", "eth"];
+  const cryptoOptions = cryptos?.map((crypto, id) => crypto.name);
 
   const cashRef = useRef<HTMLInputElement>(null);
 
@@ -101,8 +107,9 @@ export const ExchangeForm = ({
     >
       <SendInput
         buying={buying}
+        resetAmount={resetAmount}
         sending={sendingAmount as number}
-        cryptoCurrencies={cryptoOptions}
+        cryptoCurrencies={cryptoOptions as string[]}
         fiatCurrencies={fiatOptions}
         setReceivingCurrency={setReceivingCurrency}
         setSendingAmount={setSendingAmount}
@@ -111,8 +118,8 @@ export const ExchangeForm = ({
       <div className="flex items-center justify-between w-full py-4">
         <div className="-ml-2">
           <ul className="text-[12px]">
-            <li>Comisión: {commission}%</li>
-            <li>Fee de red: {fee} USD</li>
+            <li>Comisión: {}%</li>
+            {buying ? <li>Fee de red: {} USD</li> : <li>Fee de red: 0</li>}
           </ul>
         </div>
 
@@ -146,8 +153,9 @@ export const ExchangeForm = ({
       <ReceiveInput
         receive={receiveAmount}
         buying={buying}
-        cryptoCurrencies={cryptoOptions}
+        cryptoCurrencies={cryptoOptions as string[]}
         fiatCurrencies={fiatOptions}
+        resetAmount={resetAmount}
         receivingCurrency={receivingCurrency}
         setReceivingCurrency={setReceivingCurrency}
         setSendingAmount={setSendingAmount}

@@ -1,5 +1,10 @@
 import { ExchangeForm } from "@/components/exchange/Form";
-import { getConstants, getDollar } from "../../../utils/services";
+import {
+  getConstants,
+  getDollar,
+  getAllConstants,
+  calculateExchange,
+} from "../../../utils/services";
 import { DollarPrice } from "@/components/exchange/DollarPrice";
 
 const apiUrl = process.env.API_URL;
@@ -13,6 +18,9 @@ export default async function ExchangePage() {
 
   const [constantsResult, dollarResult] = formInfo;
 
+  const allConsts = await getAllConstants(apiUrl!, apiKey!);
+  console.log("all constants =>", allConsts);
+
   const constants =
     constantsResult.status == "fulfilled" && constantsResult.value;
 
@@ -22,7 +30,7 @@ export default async function ExchangePage() {
   console.log(dollarPrice);
   return (
     <main className="flex min-h-screen flex-col w-full items-center justify-between  bg-[#2b2b36] p-24 pt-4 lg:pt-12">
-      <ExchangeForm {...constants} {...dollarPrice} />
+      <ExchangeForm cryptos={allConsts} {...dollarPrice} />
       <DollarPrice compra={dollarPrice.compra} venta={dollarPrice.venta} />
     </main>
   );

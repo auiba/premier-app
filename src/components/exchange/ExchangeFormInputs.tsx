@@ -39,10 +39,12 @@ type ExchangeInput = {
   setSendingCurrency: Dispatch<SetStateAction<any>>;
   setReceivingCurrency: Dispatch<SetStateAction<any>>;
   setSendingAmount: Dispatch<SetStateAction<any>>;
+  resetAmount: Function;
 };
 
 export const SendInput = ({
   buying,
+  resetAmount,
   sending,
   setSendingCurrency,
   setSendingAmount,
@@ -81,7 +83,7 @@ export const SendInput = ({
           <input
             min={0}
             step={"any"}
-            value={sending! > 0 ? sending : undefined}
+            value={sending! > 0 ? sending : ""}
             placeholder="0"
             onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
             // value={sending}
@@ -100,6 +102,7 @@ export const SendInput = ({
           className="p-2 text-white text-xl bg-[#36324a] border-[1px] rounded border-gray-600  h-16 w-24 uppercase"
           onChange={(e) => {
             e.preventDefault();
+            resetAmount();
             setSendingCurrency(e.target.value);
           }}
           name="send"
@@ -113,6 +116,7 @@ export const SendInput = ({
 };
 
 export const ReceiveInput = ({
+  resetAmount,
   buying,
   receive,
   setReceivingCurrency,
@@ -149,6 +153,7 @@ export const ReceiveInput = ({
           className="p-2 text-white text-xl bg-[#36324a]  border-[1px] rounded border-gray-600  h-16 w-24 uppercase"
           onChange={(e) => {
             e.preventDefault();
+            resetAmount();
             setReceivingCurrency(e.target.value);
           }}
           name="receive"

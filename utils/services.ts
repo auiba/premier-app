@@ -46,6 +46,14 @@ export async function getConstants(apiURL: string, apiSignature: string) {
   return response;
 }
 
+export async function getAllConstants(apiURL: string, apiSignature: string) {
+  const body = new FormData();
+  body.set("getallconstants", "true");
+  const response = await makeRequest(apiURL, apiSignature, body);
+
+  return response;
+}
+
 export async function getDollar(apiURL: string, apiSignature: string) {
   const body = new FormData();
   body.set("getdollar", "true");
