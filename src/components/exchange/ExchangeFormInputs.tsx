@@ -87,7 +87,7 @@ export const SendInput = ({
             placeholder="0"
             onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
             // value={sending}
-            className="text-white text-xl w-[225px] bg-[#3e3e59] h-10 p-2 rounded m-1"
+            className="text-white text-xl w-[200px] bg-[#3e3e59] h-10 p-2 rounded m-1"
             onChange={async (e) => {
               e.preventDefault();
               handleChange(e);
@@ -99,7 +99,7 @@ export const SendInput = ({
         </label>
         <select
           value={sendCurrency}
-          className="p-2 text-white text-xl bg-[#36324a] border-[1px] rounded border-gray-600  h-16 w-24 uppercase"
+          className="p-2 text-white text-xl bg-[#36324a] border-[1px] rounded border-gray-600  h-16 w-32 uppercase -ml-[12px]"
           onChange={(e) => {
             e.preventDefault();
             resetAmount();
@@ -150,7 +150,7 @@ export const ReceiveInput = ({
           {receive}
         </div>
         <select
-          className="p-2 text-white text-xl bg-[#36324a]  border-[1px] rounded border-gray-600  h-16 w-24 uppercase"
+          className="p-2 text-white text-xl bg-[#36324a]  border-[1px] rounded border-gray-600  h-16 w-32 uppercase -ml-[12px]"
           onChange={(e) => {
             e.preventDefault();
             resetAmount();
