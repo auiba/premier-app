@@ -47,9 +47,11 @@ export const ExchangeForm = ({
 
   console.log(`from: ${sendCurrency}`, `to: ${receivingCurrency}`);
 
+  const filteredCryptos = cryptos?.filter((crypto) => crypto.name !== "bitco");
+
   const selectedCurrency = buying
-    ? cryptos?.find((crypto) => crypto.name == receivingCurrency)
-    : cryptos?.find((crypto) => crypto.name == sendCurrency);
+    ? filteredCryptos?.find((crypto) => crypto.name == receivingCurrency)
+    : filteredCryptos?.find((crypto) => crypto.name == sendCurrency);
 
   const flipCurrencies = () => {
     setSendingAmount("");
@@ -99,7 +101,7 @@ export const ExchangeForm = ({
   }, [sendingAmount]);
 
   const fiatOptions = ["usd", "ars"];
-  const cryptoOptions = cryptos?.map((crypto, id) => crypto.name);
+  const cryptoOptions = filteredCryptos?.map((crypto, id) => crypto.name);
 
   const cashRef = useRef<HTMLInputElement>(null);
 
