@@ -32,7 +32,7 @@ type ExchangeInput = {
   buying: boolean;
   cryptoCurrencies: any[];
   fiatCurrencies: any[];
-  sending?: number;
+  sending?: string;
   receive?: number;
   sendCurrency?: string;
   receivingCurrency?: string;
@@ -40,6 +40,7 @@ type ExchangeInput = {
   setReceivingCurrency: Dispatch<SetStateAction<any>>;
   setSendingAmount: Dispatch<SetStateAction<any>>;
   resetAmount: Function;
+  loading?: boolean;
 };
 
 export const SendInput = ({
@@ -60,9 +61,15 @@ export const SendInput = ({
     currencyOptions = cryptoCurrencies;
   }
 
+  // ChangeEvent<HTMLInputElement>
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    setSendingAmount(value);
+    const value = e.target.value;
+    // Regex to allow empty string, "0", decimal numbers, and numbers starting with decimal point
+    const regex = /^$|^0$|^[1-9]\d*$|^[1-9]\d*\.\d*$|^0\.\d*$|^\.\d*$/;
+
+    if (regex.test(value)) {
+      setSendingAmount(value);
+    }
   };
 
   const options = currencyOptions.map((currency, id) => (
@@ -81,19 +88,13 @@ export const SendInput = ({
       <div className="flex py-2 items-center rounded justify-center w-[325px] border-[1px] h-16 border-gray-600  bg-[#3e3e59]">
         <label htmlFor="send">
           <input
-            min={0}
-            step={"any"}
-            value={sending! > 0 ? sending : ""}
+            value={sending}
             placeholder="0"
             onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
-            // value={sending}
             className="text-white text-xl w-[200px] bg-[#3e3e59] h-10 p-2 rounded m-1"
-            onChange={async (e) => {
-              e.preventDefault();
-              handleChange(e);
-            }}
+            onChange={handleChange}
             id="send"
-            type="number"
+            type="text"
             name="send"
           />
         </label>
@@ -124,6 +125,7 @@ export const ReceiveInput = ({
   cryptoCurrencies,
   fiatCurrencies,
   receivingCurrency,
+  loading,
 }: ExchangeInput) => {
   let currencyOptions;
 
@@ -149,8 +151,9 @@ export const ReceiveInput = ({
         <div className="text-white text-xl w-[225px] p-2 rounded m-1 bg-[#3e3e59]">
           {receive}
         </div>
+
         <select
-          className="p-2 text-white text-xl bg-[#36324a]  border-[1px] rounded border-gray-600  h-16 w-32 uppercase -ml-[12px]"
+          className="p-2 text-white text-xl bg-[#36324a]  border-[1px] rounded border-gray-600  h-16 w-[128px] uppercase -ml-[12px]"
           onChange={(e) => {
             e.preventDefault();
             resetAmount();

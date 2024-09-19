@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import { SendInput, ReceiveInput } from "./ExchangeFormInputs";
 import { useRouter } from "next/navigation";
 import { Crypto } from "../../../utils/types";
+import loading from "../../../public/imgs/icons/loading.gif";
 
 // "Parent" form component
 
@@ -32,7 +33,7 @@ export const ExchangeForm = ({
   dollarPrice: { compra: number; venta: number };
   cryptos?: Crypto[];
 }) => {
-  const [sendingAmount, setSendingAmount] = useState<number | "">("");
+  const [sendingAmount, setSendingAmount] = useState<string>("");
   const [sendCurrency, setSendCurrency] = useState<string>("usd");
   const [receiveAmount, setReceiveAmount] = useState(0);
   const [receivingCurrency, setReceivingCurrency] = useState("btc");
@@ -42,12 +43,15 @@ export const ExchangeForm = ({
   const [account, setAccount] = useState<string>("");
   const [buying, setBuying] = useState<boolean>(true);
   const [cash, setCash] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
 
   console.log(`from: ${sendCurrency}`, `to: ${receivingCurrency}`);
 
-  const filteredCryptos = cryptos?.filter((crypto) => crypto.name !== "bitco");
+  const filteredCryptos = cryptos?.filter(
+    (crypto) => crypto.name !== "bitco" && crypto.name !== ""
+  );
 
   const selectedCurrency = buying
     ? filteredCryptos?.find((crypto) => crypto.name == receivingCurrency)
@@ -70,11 +74,13 @@ export const ExchangeForm = ({
       async (
         sendCurrency: string,
         receivingCurrency: string,
-        value: number
+        value: string
       ) => {
         // async API service call here
         // from, to , price (amount)
         // set parent state to async call result
+
+        setLoading(true);
 
         const response = await fetch("/api/calculate", {
           method: "POST",
@@ -86,6 +92,8 @@ export const ExchangeForm = ({
         });
 
         const data = await response.json();
+
+        setLoading(false);
         // console.log(data.result);
         setReceiveAmount(data.result);
       },
@@ -96,8 +104,10 @@ export const ExchangeForm = ({
   );
 
   useEffect(() => {
-    if (sendingAmount == 0) return;
-    debouncedSearch(sendCurrency, receivingCurrency, sendingAmount as number);
+    if (sendingAmount == "0" || sendingAmount == "") return;
+    setLoading(true);
+    debouncedSearch(sendCurrency, receivingCurrency, sendingAmount as string);
+    setLoading(false);
   }, [sendingAmount]);
 
   const fiatOptions = ["usd", "ars"];
@@ -114,7 +124,7 @@ export const ExchangeForm = ({
       <SendInput
         buying={buying}
         resetAmount={resetAmount}
-        sending={sendingAmount as number}
+        sending={sendingAmount as string}
         cryptoCurrencies={cryptoOptions as string[]}
         fiatCurrencies={fiatOptions}
         setReceivingCurrency={setReceivingCurrency}
@@ -153,6 +163,7 @@ export const ExchangeForm = ({
             onClick={(e) => {
               e.preventDefault();
               flipCurrencies();
+              setCash(false);
               setBuying(true);
             }}
           >
@@ -170,6 +181,7 @@ export const ExchangeForm = ({
         setReceivingCurrency={setReceivingCurrency}
         setSendingAmount={setSendingAmount}
         setSendingCurrency={setSendCurrency}
+        loading={loading}
       />
       <label className="flex flex-col mt-4" htmlFor="name">
         Nombre y apellido *
