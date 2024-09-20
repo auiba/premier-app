@@ -1,6 +1,8 @@
 "use client";
 
 import { ChangeEvent, Dispatch, SetStateAction, useCallback } from "react";
+import Image from "next/image";
+import loadingGif from "../../../public/imgs/icons/loading.gif";
 
 // They receive display values from parent form
 // onChange they update the state of parent, which in turn
@@ -149,7 +151,11 @@ export const ReceiveInput = ({
       <h2 className="text-gray-400">Recibes</h2>
       <div className="flex py-2 items-center rounded justify-center h-16 w-[325px] bg-[#3e3e59] border-[1px] border-gray-600">
         <div className="text-white text-xl w-[225px] p-2 rounded m-1 bg-[#3e3e59]">
-          {receive}
+          {loading ? (
+            <Image src={loadingGif} height={30} width={35} alt="" />
+          ) : (
+            receive
+          )}
         </div>
 
         <select
