@@ -6,6 +6,7 @@ type TextInput = {
   htmlfor: string;
   name: string;
   labelText: string;
+  ph?: string;
 };
 
 export const TextInput = ({
@@ -14,16 +15,20 @@ export const TextInput = ({
   htmlfor,
   name,
   labelText,
+  ph,
 }: TextInput) => {
   return (
-    <label htmlFor={htmlfor}>
+    <label
+      className="flex flex-col items-start justify-center"
+      htmlFor={htmlfor}
+    >
       {labelText}
       <input
         value={value}
-        placeholder="0"
+        placeholder={ph}
         onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
-        className="text-white text-xl w-[200px] bg-[#3e3e59] h-10 p-2 rounded m-1"
-        onChange={handleChange}
+        className="text-white text-xl w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
+        onChange={(e) => handleChange(e)}
         id="send"
         type="text"
         name={name}
