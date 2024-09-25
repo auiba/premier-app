@@ -19,7 +19,7 @@ export const TextInput = ({
 }: TextInput) => {
   return (
     <label
-      className="flex flex-col items-start justify-center"
+      className="flex flex-col items-start justify-center text-gray-300"
       htmlFor={htmlfor}
     >
       {labelText}
@@ -27,7 +27,7 @@ export const TextInput = ({
         value={value}
         placeholder={ph}
         onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
-        className="text-white text-xl w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
+        className="text-white text-lg w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
         onChange={(e) => handleChange(e)}
         id="send"
         type="text"

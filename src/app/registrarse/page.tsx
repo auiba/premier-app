@@ -5,7 +5,7 @@ import { RegistrationForm } from "@/components/registration/Form";
 
 export default async function RegistrationPage() {
   return (
-    <section className="flex min-h-screen flex-col w-full items-center justify-between  bg-[#2b2b36] p-24 pt-4 lg:pt-12">
+    <section className="flex min-h-screen flex-col w-full items-center justify-between  bg-[#2b2b36] lg:pt-12">
       <RegistrationForm />
     </section>
   );
