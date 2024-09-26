@@ -54,8 +54,16 @@ export const ExchangeForm = ({
   );
 
   const selectedCurrency = buying
-    ? filteredCryptos?.find((crypto) => crypto.name == receivingCurrency)
+    ? filteredCryptos?.find((crypto) => crypto.name == receivingCurrency) || {
+        id: "1",
+        name: "bitcoin",
+        crypto: "btc",
+        comm: "5.00",
+        fee: "5.00",
+      }
     : filteredCryptos?.find((crypto) => crypto.name == sendCurrency);
+
+  console.log(selectedCurrency);
 
   const flipCurrencies = () => {
     setSendingAmount("");

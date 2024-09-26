@@ -14,18 +14,17 @@ export default async function ExchangePage() {
   const formInfo = await Promise.allSettled([
     getConstants(apiUrl!, apiKey!),
     getDollar(apiUrl!, apiKey!),
+    getAllConstants(apiUrl!, apiKey!),
   ]);
 
-  const [constantsResult, dollarResult] = formInfo;
-
-  const allConsts = await getAllConstants(apiUrl!, apiKey!);
-  console.log("all constants =>", allConsts);
+  const [constantsResult, dollarResult, allConstants] = formInfo;
 
   const constants =
     constantsResult.status == "fulfilled" && constantsResult.value;
 
   console.log(constants);
   const dollarPrice = dollarResult.status == "fulfilled" && dollarResult.value;
+  const allConsts = allConstants.status == "fulfilled" && allConstants.value;
 
   console.log(dollarPrice);
   return (
