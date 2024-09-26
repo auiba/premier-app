@@ -119,8 +119,9 @@ export const ExchangeForm = ({
     setLoading(false);
   }, [sendingAmount]);
 
-  // const fiatOptions = ["usd", "ars"];
-  // const cryptoOptions = cryptos?.map((crypto, id) => crypto.name);
+  const fiatOptions = ["usd", "ars"];
+  const cryptoOptions =
+    Array.isArray(cryptos) && cryptos?.map((crypto, id) => crypto.name);
 
   const cashRef = useRef<HTMLInputElement>(null);
 
@@ -130,7 +131,7 @@ export const ExchangeForm = ({
       action=""
       onSubmit={(e) => e.preventDefault()}
     >
-      {/* <SendInput
+      <SendInput
         buying={buying}
         resetAmount={resetAmount}
         sending={sendingAmount as string}
@@ -139,7 +140,7 @@ export const ExchangeForm = ({
         setReceivingCurrency={setReceivingCurrency}
         setSendingAmount={setSendingAmount}
         setSendingCurrency={setSendCurrency}
-      /> */}
+      />
       <div className="flex items-center justify-between w-full py-4">
         <div className="-ml-2">
           <ul className="text-[12px]">
@@ -182,7 +183,7 @@ export const ExchangeForm = ({
           </button>
         </div>
       </div>
-      {/* <ReceiveInput
+      <ReceiveInput
         receive={receiveAmount}
         buying={buying}
         cryptoCurrencies={cryptoOptions as string[]}
@@ -193,7 +194,7 @@ export const ExchangeForm = ({
         setSendingAmount={setSendingAmount}
         setSendingCurrency={setSendCurrency}
         loading={loading}
-      /> */}
+      />
       <label className="flex flex-col mt-4" htmlFor="name">
         Nombre y apellido *
         <input

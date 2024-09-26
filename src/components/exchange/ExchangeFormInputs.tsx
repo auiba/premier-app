@@ -74,15 +74,17 @@ export const SendInput = ({
     }
   };
 
-  const options = currencyOptions.map((currency, id) => (
-    <option
-      key={id}
-      className="p-2 text-white uppercase bg-[#3e3e59]"
-      value={currency}
-    >
-      {currency}
-    </option>
-  ));
+  const options =
+    Array.isArray(currencyOptions) &&
+    currencyOptions.map((currency, id) => (
+      <option
+        key={id}
+        className="p-2 text-white uppercase bg-[#3e3e59]"
+        value={currency}
+      >
+        {currency}
+      </option>
+    ));
 
   return (
     <div className="flex flex-col gap-2">
@@ -137,15 +139,17 @@ export const ReceiveInput = ({
     currencyOptions = fiatCurrencies;
   }
 
-  const options = currencyOptions.map((currency, id) => (
-    <option
-      key={id}
-      className="p-2 text-white uppercase bg-[#3e3e59]"
-      value={currency}
-    >
-      {currency}
-    </option>
-  ));
+  const options =
+    Array.isArray(currencyOptions) &&
+    currencyOptions.map((currency, id) => (
+      <option
+        key={id}
+        className="p-2 text-white uppercase bg-[#3e3e59]"
+        value={currency}
+      >
+        {currency}
+      </option>
+    ));
   return (
     <div className="flex flex-col text-white gap-2">
       <h2 className="text-gray-400">Recibes</h2>
