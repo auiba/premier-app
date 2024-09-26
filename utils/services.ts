@@ -33,7 +33,6 @@ export async function calculateExchange(
 
   const response = await makeRequest(apiURL, apiSignature, body);
 
-  console.log(response);
   return response;
 }
 
@@ -42,7 +41,6 @@ export async function getConstants(apiURL: string, apiSignature: string) {
   body.set("getconstants", "true");
   const response = await makeRequest(apiURL, apiSignature, body);
 
-  console.log(response);
   return response;
 }
 
@@ -85,7 +83,6 @@ export async function createUrl(
   body.set("whatsapp", whatsapp);
 
   const response = await makeRequest(apiURL, apiSignature, body);
-  console.log("creaturl response =>", response);
 
   return response;
 }
