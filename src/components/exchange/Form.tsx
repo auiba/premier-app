@@ -291,12 +291,10 @@ export const ExchangeForm = ({
               phone: phone,
             }),
           });
-          console.log(response);
-          const okdata = await response.json();
 
-          // const data =
-          //   response &&
-          //   (await response.json().then((urlData) => router.push(urlData.url)));
+          const data =
+            response &&
+            (await response.json().then((urlData) => router.push(urlData.url)));
         }}
       >
         {buying ? "Comprar" : "Vender"}
