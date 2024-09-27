@@ -14,6 +14,7 @@ model Customer {
   name String
   lastName String @map("last_name")
   birth        DateTime?
+  email String
   gender String?
   civil String
   dni String
