@@ -25,10 +25,10 @@ model Customer {
   city String
   postalCode String @map("postal_code")
   phone String
-  dniPicture String @map("dni_picture")
-  dniBackPicture String @map("dni_back_picture")
-  selfie String 
-  servicePicture String @map("service_picture")
+  dniPicture String? @map("dni_picture")
+  dniBackPicture String? @map("dni_back_picture")
+  selfie String? 
+  servicePicture String? @map("service_picture")
 }
 
 // Magic link emails auth -->
