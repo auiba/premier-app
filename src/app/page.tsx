@@ -10,12 +10,6 @@ export default async function Home() {
       >
         Comprar/vender crypto →
       </a>
-      <a
-        className="text-white text-xl p-2 rounded border-2 border-white"
-        href="/auth/signin"
-      >
-        Ingresar →
-      </a>
     </main>
   );
 }

@@ -59,12 +59,13 @@ export const RegistrationForm = () => {
           />
           <label
             className="flex flex-col justify-center text-gray-300"
-            htmlFor="age"
+            htmlFor="birth"
           >
             Fecha de nacimiento
             <input
               className="text-white text-xl w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
               onChange={(e) => handleChange(e)}
+              name="birth"
               type="date"
               value={formData.birth}
             />
@@ -271,7 +272,16 @@ export const RegistrationForm = () => {
 
           <button
             className="flex w-3/4 items-center font-bold text-lg justify-center text-center rounded p-4 h-12  bg-[#00c26ebe] mt-4"
-            onClick={(e) => e.preventDefault()}
+            onClick={async (e) => {
+              e.preventDefault();
+              const createUser = await fetch("/api/user", {
+                method: "POST",
+                body: JSON.stringify(formData),
+              });
+
+              const received = await createUser.json();
+              console.log(received);
+            }}
           >
             Registrarse
           </button>

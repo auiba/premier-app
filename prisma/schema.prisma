@@ -1,7 +1,7 @@
 
 
 datasource db {
-  url      = env("DATABASE_URL")
+  url      = env("POSTGRES_URL")
   provider = "postgresql"
 }
 
@@ -21,7 +21,7 @@ model Customer {
   politicalExposure Boolean @map("political_exposure")
   address String
   floor Int
-  aparment String
+  apartment String
   city String
   postalCode String @map("postal_code")
   phone String

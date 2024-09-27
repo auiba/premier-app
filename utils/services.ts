@@ -84,5 +84,7 @@ export async function createUrl(
 
   const response = await makeRequest(apiURL, apiSignature, body);
 
+  console.log("creating url response =>", response);
+
   return response;
 }

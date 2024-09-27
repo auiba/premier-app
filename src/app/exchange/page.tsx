@@ -25,9 +25,6 @@ export default async function ExchangePage() {
   const dollarPrice = dollarResult.status == "fulfilled" && dollarResult.value;
   const allConsts = allConstants.status == "fulfilled" && allConstants.value;
 
-  console.log("constants", constants);
-  console.log("all constants", allConsts);
-  console.log("dollarprice", dollarPrice);
   return (
     <main className="flex min-h-screen flex-col w-full items-center justify-between  bg-[#2b2b36] p-24 pt-4 lg:pt-12">
       <ExchangeForm cryptos={allConsts} {...dollarPrice} />
