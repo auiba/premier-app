@@ -7,7 +7,11 @@ import Image from "next/image";
 
 // #00c26f green
 
-export const RegistrationForm = () => {
+export const RegistrationForm = ({
+  sessionEmail,
+}: {
+  sessionEmail: string;
+}) => {
   const [formData, setFormData] = useState({
     name: "",
     lastName: "",
@@ -271,7 +275,13 @@ export const RegistrationForm = () => {
 
           <button
             className="flex w-3/4 items-center font-bold text-lg justify-center text-center rounded p-4 h-12  bg-[#00c26ebe] mt-4"
-            onClick={(e) => e.preventDefault()}
+            onClick={async (e) => {
+              e.preventDefault();
+              const response = await fetch("/api/customer", {
+                method: "POST",
+                body: JSON.stringify({ ...formData, email: "" }),
+              });
+            }}
           >
             Registrarse
           </button>
