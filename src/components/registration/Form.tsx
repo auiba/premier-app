@@ -26,17 +26,22 @@ export const RegistrationForm = ({
     postalCode: "",
     phone: "",
   });
+  const [dniFront, setDniFront] = useState<File | undefined>(undefined);
+  const [dniBack, setDniBack] = useState<File | undefined>(undefined);
+  const [dniSelfie, setDniSelfie] = useState<File | undefined>(undefined);
+
   const [step, setStep] = useState<number>(1);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   console.log(formData);
+  console.log("email", sessionEmail);
 
   return (
     <form
       className="text-white items-center 
-      gap-4  flex flex-col w-[375px] bg-[#343443] p-4 pb-8 rounded border-[1px] min-h-[650px] border-gray-600"
+      gap-2  flex flex-col w-[375px] bg-[#343443] p-4 pb-8 rounded border-[1px] min-h-[650px] border-gray-600"
       action=""
     >
       <h2 className="text-xl text-white ">
@@ -63,10 +68,11 @@ export const RegistrationForm = ({
           />
           <label
             className="flex flex-col justify-center text-gray-300"
-            htmlFor="age"
+            htmlFor="birth"
           >
             Fecha de nacimiento
             <input
+              name="birth"
               className="text-white text-xl w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
               onChange={(e) => handleChange(e)}
               type="date"
@@ -102,6 +108,7 @@ export const RegistrationForm = ({
               }
               className="text-white text-lg w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
               name="civil"
+              value={formData.civil}
             >
               <option value={""}>Elige una opción</option>
               <option value={"casado"}>Casado</option>
@@ -149,9 +156,19 @@ export const RegistrationForm = ({
             type="file"
             accept=".JPG, .jpg"
             className="h-[1px] mb-2 hover:cursor-pointer opacity-0"
-          />
+            onChange={(e) => {
+              const files = e.target.files;
 
-          <span>Foto dorso DNI</span>
+              if (files && files?.length > 0) {
+                setDniFront(files[0]);
+              }
+            }}
+          />
+          {dniFront && (
+            <span className="ml-2 text-gray-300">{dniFront?.name}</span>
+          )}
+
+          <span className="mb-2">Foto dorso DNI</span>
           <label
             className="flex items-center justify-center gap-2 p-2 w-[160px] text-lg text-left rounded border-2 border-orange justify-self-center hover:cursor-pointer "
             htmlFor="dniBack"
@@ -164,7 +181,17 @@ export const RegistrationForm = ({
             type="file"
             accept=".JPG, .jpg"
             className="h-[1px] mb-2 hover:cursor-pointer opacity-0"
+            onChange={(e) => {
+              const files = e.target.files;
+
+              if (files && files?.length > 0) {
+                setDniBack(files[0]);
+              }
+            }}
           />
+          {dniBack && (
+            <span className="ml-2 text-gray-300">{dniBack?.name}</span>
+          )}
 
           <span>Selfie DNI</span>
           <label
@@ -179,7 +206,15 @@ export const RegistrationForm = ({
             type="file"
             accept=".JPG, .jpg"
             className="h-[1px] mb-2 hover:cursor-pointer opacity-0"
+            onChange={(e) => {
+              const files = e.target.files;
+
+              if (files && files?.length > 0) {
+                setDniSelfie(files[0]);
+              }
+            }}
           />
+          <span className="ml-2 text-gray-300">{dniSelfie?.name}</span>
         </>
       )}
       {step === 3 && (
@@ -261,13 +296,13 @@ export const RegistrationForm = ({
           <span>Foto de copia del servicio</span>
           <label
             className="flex items-center justify-center gap-2 p-2 w-[160px] text-lg text-left rounded border-2 border-orange justify-self-center hover:cursor-pointer "
-            htmlFor="dniFront"
+            htmlFor="serviceImage"
           >
             <Image height={35} width={35} src={uploadArrow} alt="" /> Subir foto
           </label>
           <input
-            id="dniFront"
-            name="dniFront"
+            id="serviceImage"
+            name="serviceImage"
             type="file"
             accept=".JPG, .jpg"
             className="h-[1px] mb-2 hover:cursor-pointer opacity-0"
@@ -279,8 +314,10 @@ export const RegistrationForm = ({
               e.preventDefault();
               const response = await fetch("/api/customer", {
                 method: "POST",
-                body: JSON.stringify({ ...formData, email: "" }),
+                body: JSON.stringify({ ...formData, email: sessionEmail }),
               });
+
+              console.log(response);
             }}
           >
             Registrarse
