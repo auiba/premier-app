@@ -53,7 +53,6 @@ export const ExchangeForm = ({
 
   // Selected currency OR bitcoin if nothing has been selected (first load)
 
-  console.log("cryptos ==>", cryptos);
   const selectedCurrency =
     Array.isArray(cryptos) && buying
       ? cryptos?.find((crypto) => crypto.name == receivingCurrency) || {
@@ -66,6 +65,7 @@ export const ExchangeForm = ({
       : Array.isArray(cryptos) &&
         cryptos?.find((crypto) => crypto.name == sendCurrency);
 
+  console.log("selectedcurr", selectedCurrency);
   const flipCurrencies = () => {
     setSendingAmount("");
     setReceiveAmount(0);
@@ -144,7 +144,10 @@ export const ExchangeForm = ({
       <div className="flex items-center justify-between w-full py-4">
         <div className="-ml-2">
           <ul className="text-[12px]">
-            <li>Comisión: {selectedCurrency && selectedCurrency?.comm}%</li>
+            <li>
+              Comisión: {(selectedCurrency && selectedCurrency?.comm) || "5.00"}
+              %
+            </li>
             {buying ? (
               <li>
                 Fee de red: {selectedCurrency && selectedCurrency?.fee} USD
@@ -163,6 +166,8 @@ export const ExchangeForm = ({
             onClick={(e) => {
               e.preventDefault();
               flipCurrencies();
+              setReceivingCurrency("usd");
+              setSendCurrency("btc");
               setBuying(false);
             }}
           >
