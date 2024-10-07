@@ -6,6 +6,8 @@ import {
   calculateExchange,
 } from "../../utils/services";
 import { DollarPrice } from "@/components/exchange/DollarPrice";
+import { Suspense } from "react";
+import LoadingSkeleton from "./loading";
 
 const apiUrl = process.env.API_URL;
 const apiKey = process.env.API_SIGNATURE;
@@ -26,9 +28,11 @@ export default async function ExchangePage() {
   const allConsts = allConstants.status == "fulfilled" && allConstants.value;
 
   return (
-    <main className="flex min-h-screen flex-col w-full items-center justify-between  bg-[#2b2b36] p-24 pt-4 lg:pt-12">
-      <ExchangeForm cryptos={allConsts} {...dollarPrice} />
-      <DollarPrice compra={dollarPrice.compra} venta={dollarPrice.venta} />
-    </main>
+    <Suspense fallback={<LoadingSkeleton />}>
+      <main className="flex min-h-screen flex-col w-full items-center justify-between  bg-[#2b2b36] p-24 pt-4 lg:pt-12">
+        <ExchangeForm cryptos={allConsts} {...dollarPrice} />
+        <DollarPrice compra={dollarPrice.compra} venta={dollarPrice.venta} />
+      </main>
+    </Suspense>
   );
 }
