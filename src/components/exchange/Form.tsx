@@ -235,7 +235,7 @@ export const ExchangeForm = ({
           className="w-[325px] rounded h-10 p-2 bg-[#3e3e59]"
           id="phone"
           name="phone"
-          type="number"
+          type="text"
           value={phone! !== "" ? phone : ""}
         />
       </label>

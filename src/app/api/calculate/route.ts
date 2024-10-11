@@ -29,6 +29,35 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  if (to === "ars") {
+    console.log("EN ARGS");
+    const dollarPrices = await getDollar(apiUrl!, apiKey!);
+
+    const dollar: number = dollarPrices.compra;
+    console.log("dollar", dollar);
+    // const amount = Number(price) / dollar;
+    // console.log(amount);
+    try {
+      const data = await calculateExchange(
+        apiUrl!,
+        apiKey!,
+        from,
+        "usd",
+        price
+      );
+
+      console.log("data", data);
+      const inArgs = Number(data.result) * dollar;
+
+      return NextResponse.json({ result: inArgs });
+    } catch (err) {
+      console.error(
+        "error calculating exchange from ars to usd to crypto",
+        err
+      );
+    }
+  }
+
   try {
     console.log("try calling service AGAIN...");
     const data = await calculateExchange(apiUrl!, apiKey!, from, to, price);
