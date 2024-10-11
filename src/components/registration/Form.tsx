@@ -154,13 +154,20 @@ export const RegistrationForm = ({
             id="dniFront"
             name="dniFront"
             type="file"
-            accept=".JPG, .jpg"
+            accept=".JPG, .jpg, .jpeg"
             className="h-[1px] mb-2 hover:cursor-pointer opacity-0"
-            onChange={(e) => {
+            onChange={async (e) => {
               const files = e.target.files;
 
               if (files && files?.length > 0) {
                 setDniFront(files[0]);
+              }
+              const fileUrl = URL.createObjectURL(files![0]);
+              if (files) {
+                const blobUpload = await fetch("/api/upload", {
+                  method: "PUT",
+                  body: JSON.stringify(files[0]),
+                });
               }
             }}
           />
@@ -179,7 +186,7 @@ export const RegistrationForm = ({
             id="dniBack"
             name="dniBack"
             type="file"
-            accept=".JPG, .jpg"
+            accept=".JPG, .jpg, .jpeg"
             className="h-[1px] mb-2 hover:cursor-pointer opacity-0"
             onChange={(e) => {
               const files = e.target.files;
@@ -204,7 +211,7 @@ export const RegistrationForm = ({
             id="selfie"
             name="selfie"
             type="file"
-            accept=".JPG, .jpg"
+            accept=".JPG, .jpg, .jpeg"
             className="h-[1px] mb-2 hover:cursor-pointer opacity-0"
             onChange={(e) => {
               const files = e.target.files;
@@ -304,7 +311,7 @@ export const RegistrationForm = ({
             id="serviceImage"
             name="serviceImage"
             type="file"
-            accept=".JPG, .jpg"
+            accept=".JPG, .jpg, .jpeg"
             className="h-[1px] mb-2 hover:cursor-pointer opacity-0"
           />
 
