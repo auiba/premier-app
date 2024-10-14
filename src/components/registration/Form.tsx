@@ -162,16 +162,25 @@ export const RegistrationForm = ({
             onChange={async (e) => {
               const files = e.target.files;
 
-              if (files && files?.length > 0) {
-                setDniFront(files[0]);
-              }
-              const fileUrl = URL.createObjectURL(files![0]);
+              let blobFile;
               if (files) {
+                blobFile = await fileToBlob(files[0]);
+                console.log(blobFile);
+
+                const formData = new FormData();
+                formData.append("blobFile", blobFile, files[0].name);
+
                 const blobUpload = await fetch("/api/upload", {
                   method: "PUT",
-                  body: JSON.stringify(files[0]),
+                  body: formData,
                 });
               }
+              // Upload to vercel blob storage, THEN use the retrieved url and assign it to state
+              // so it can be sent as user registration to api endpoint
+
+              // if (files && files?.length > 0) {
+              //   setDniFront(files[0]);
+              // }
             }}
           />
           {dniFront && (
@@ -194,14 +203,24 @@ export const RegistrationForm = ({
             onChange={async (e) => {
               const files = e.target.files;
 
+              let blobFile;
               if (files) {
-                const blobFile = await fileToBlob(files[0]);
+                blobFile = await fileToBlob(files[0]);
                 console.log(blobFile);
+
+                const formData = new FormData();
+                formData.append("blobFile", blobFile, files[0].name);
+
+                const blobUpload = await fetch("/api/upload", {
+                  method: "PUT",
+                  body: formData,
+                });
               }
-              console.log(files && files[0].type);
-              if (files && files?.length > 0) {
-                setDniBack(files[0]);
-              }
+              // Upload to vercel blob storage, THEN use the retrieved url and assign it to state
+              // so it can be sent as user registration to api endpoint
+              // if (files && files?.length > 0) {
+              //   setDniBack(files[0]);
+              // }
             }}
           />
           {dniBack && (
@@ -221,12 +240,26 @@ export const RegistrationForm = ({
             type="file"
             accept=".JPG, .jpg, .jpeg"
             className="h-[1px] mb-2 hover:cursor-pointer opacity-0"
-            onChange={(e) => {
+            onChange={async (e) => {
               const files = e.target.files;
 
-              if (files && files?.length > 0) {
-                setDniSelfie(files[0]);
+              let blobFile;
+              if (files) {
+                blobFile = await fileToBlob(files[0]);
+                console.log(blobFile);
+
+                const formData = new FormData();
+                formData.append("blobFile", blobFile, files[0].name);
+
+                const blobUpload = await fetch("/api/upload", {
+                  method: "PUT",
+                  body: formData,
+                });
               }
+
+              // if (files && files?.length > 0) {
+              //   setDniSelfie(files[0]);
+              // }
             }}
           />
           <span className="ml-2 text-gray-300">{dniSelfie?.name}</span>
@@ -321,6 +354,24 @@ export const RegistrationForm = ({
             type="file"
             accept=".JPG, .jpg, .jpeg"
             className="h-[1px] mb-2 hover:cursor-pointer opacity-0"
+            onChange={async (e) => {
+              // upload to vercel blob storage, THEN use the returned url to store as user data
+              const files = e.target.files;
+
+              let blobFile;
+              if (files) {
+                blobFile = await fileToBlob(files[0]);
+                console.log(blobFile);
+
+                const formData = new FormData();
+                formData.append("blobFile", blobFile, files[0].name);
+
+                const blobUpload = await fetch("/api/upload", {
+                  method: "PUT",
+                  body: formData,
+                });
+              }
+            }}
           />
 
           <button

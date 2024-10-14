@@ -9,9 +9,12 @@ const nanoid = customAlphabet(
 );
 
 export async function PUT(request: Request) {
-  const data = await request.json();
+  const formData = await request.formData();
+  const blobFile = formData.get("blobFile") as File;
 
-  console.log("blob endpoint", data);
+  if (blobFile) {
+    console.log("blob endpoint file:", blobFile);
+  }
 
   return NextResponse.json("uploaded");
 
