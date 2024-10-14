@@ -7,6 +7,9 @@ import Image from "next/image";
 
 // #00c26f green
 
+const fileToBlob = async (file: File) =>
+  new Blob([new Uint8Array(await file.arrayBuffer())], { type: file.type });
+
 export const RegistrationForm = ({
   sessionEmail,
 }: {
@@ -188,9 +191,14 @@ export const RegistrationForm = ({
             type="file"
             accept=".JPG, .jpg, .jpeg"
             className="h-[1px] mb-2 hover:cursor-pointer opacity-0"
-            onChange={(e) => {
+            onChange={async (e) => {
               const files = e.target.files;
 
+              if (files) {
+                const blobFile = await fileToBlob(files[0]);
+                console.log(blobFile);
+              }
+              console.log(files && files[0].type);
               if (files && files?.length > 0) {
                 setDniBack(files[0]);
               }
