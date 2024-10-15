@@ -45,7 +45,7 @@ export default async function ExchangePage() {
   return (
     <main className="flex min-h-screen flex-col w-full items-center justify-between  bg-[#2b2b36] p-24 pt-4 lg:pt-12">
       <VipExchangeForm
-        name={""}
+        name={customerInfo?.name}
         email={userEmail}
         cryptos={allConsts}
         {...dollarPrice}
