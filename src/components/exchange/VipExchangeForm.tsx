@@ -27,17 +27,19 @@ function debounce<T extends (...args: any[]) => Promise<void>>(
 
 export const VipExchangeForm = ({
   dollarPrice,
-  cryptos,
+  cryptos = [],
+  email,
+  name,
 }: {
   dollarPrice: { compra: number; venta: number };
   cryptos?: Crypto[];
+  email: string;
+  name: string;
 }) => {
   const [sendingAmount, setSendingAmount] = useState<string>("");
   const [sendCurrency, setSendCurrency] = useState<string>("usd");
   const [receiveAmount, setReceiveAmount] = useState(0);
   const [receivingCurrency, setReceivingCurrency] = useState("btc");
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [account, setAccount] = useState<string>("");
   const [buying, setBuying] = useState<boolean>(true);
@@ -46,16 +48,25 @@ export const VipExchangeForm = ({
 
   const router = useRouter();
 
-  console.log(`from: ${sendCurrency}`, `to: ${receivingCurrency}`);
+  // const filteredCryptos = cryptos?.filter(
+  //   (crypto) => crypto.name !== "bitco" && crypto.name !== ""
+  // );
 
-  const filteredCryptos = cryptos?.filter(
-    (crypto) => crypto.name !== "bitco" && crypto.name !== ""
-  );
+  // Selected currency OR bitcoin if nothing has been selected (first load)
 
-  const selectedCurrency = buying
-    ? filteredCryptos?.find((crypto) => crypto.name == receivingCurrency)
-    : filteredCryptos?.find((crypto) => crypto.name == sendCurrency);
+  const selectedCurrency =
+    Array.isArray(cryptos) && buying
+      ? cryptos?.find((crypto) => crypto.name == receivingCurrency) || {
+          id: "1",
+          name: "bitcoin",
+          crypto: "btc",
+          comm: "5.00",
+          fee: "5.00",
+        }
+      : Array.isArray(cryptos) &&
+        cryptos?.find((crypto) => crypto.name == sendCurrency);
 
+  console.log("selectedcurr", selectedCurrency);
   const flipCurrencies = () => {
     setSendingAmount("");
     setReceiveAmount(0);
@@ -96,7 +107,7 @@ export const VipExchangeForm = ({
         // console.log(data.result);
         setReceiveAmount(data.result);
       },
-      100
+      300
     ),
 
     []
@@ -110,7 +121,8 @@ export const VipExchangeForm = ({
   }, [sendingAmount]);
 
   const fiatOptions = ["usd", "ars"];
-  const cryptoOptions = filteredCryptos?.map((crypto, id) => crypto.name);
+  const cryptoOptions =
+    Array.isArray(cryptos) && cryptos?.map((crypto, id) => crypto.name);
 
   const cashRef = useRef<HTMLInputElement>(null);
 
@@ -133,9 +145,14 @@ export const VipExchangeForm = ({
       <div className="flex items-center justify-between w-full py-4">
         <div className="-ml-2">
           <ul className="text-[12px]">
-            <li>Comisión: {selectedCurrency?.comm}%</li>
+            <li>
+              Comisión: {(selectedCurrency && selectedCurrency?.comm) || "5.00"}
+              %
+            </li>
             {buying ? (
-              <li>Fee de red: {selectedCurrency?.fee} USD</li>
+              <li>
+                Fee de red: {selectedCurrency && selectedCurrency?.fee} USD
+              </li>
             ) : (
               <li>Fee de red: 0</li>
             )}
@@ -150,6 +167,8 @@ export const VipExchangeForm = ({
             onClick={(e) => {
               e.preventDefault();
               flipCurrencies();
+              setReceivingCurrency("usd");
+              setSendCurrency("btc");
               setBuying(false);
             }}
           >
@@ -192,7 +211,7 @@ export const VipExchangeForm = ({
           className="w-[325px] rounded h-10 p-2 bg-[#3e3e59]"
           id="phone"
           name="phone"
-          type="number"
+          type="text"
           value={phone! !== "" ? phone : ""}
         />
       </label>
@@ -254,9 +273,9 @@ export const VipExchangeForm = ({
             }),
           });
 
-          const data = await response
-            .json()
-            .then((urlData) => router.push(urlData.url));
+          const data =
+            response &&
+            (await response.json().then((urlData) => router.push(urlData.url)));
         }}
       >
         {buying ? "Comprar" : "Vender"}
