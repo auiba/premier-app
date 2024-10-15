@@ -25,6 +25,6 @@ export default async function RegistrationPage() {
       );
     }
   } else {
-    redirect("/");
+    redirect("/auth/signin");
   }
 }
