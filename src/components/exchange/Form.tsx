@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import { SendInput, ReceiveInput } from "./ExchangeFormInputs";
 import { useRouter } from "next/navigation";
 import { Crypto } from "../../../utils/types";
-import loading from "../../../public/imgs/icons/loading.gif";
 
 // "Parent" form component
 
