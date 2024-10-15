@@ -45,8 +45,6 @@ export const RegistrationForm = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  console.log(formData);
-  console.log("email", sessionEmail);
 
   return (
     <form
@@ -191,7 +189,6 @@ export const RegistrationForm = ({
               if (files) {
                 setDniFront(files[0]);
                 blobFile = await fileToBlob(files[0]);
-                console.log(blobFile);
 
                 const formData = new FormData();
                 formData.append("blobFile", blobFile, files[0].name);
@@ -204,7 +201,6 @@ export const RegistrationForm = ({
                 const dataz = await blobUpload.json();
 
                 setDniFrontUrl(dataz);
-                console.log("blob upload resposnse =>", dataz);
               }
             }}
           />
@@ -232,7 +228,6 @@ export const RegistrationForm = ({
               if (files) {
                 setDniBack(files[0]);
                 blobFile = await fileToBlob(files[0]);
-                console.log(blobFile);
 
                 const formData = new FormData();
                 formData.append("blobFile", blobFile, files[0].name);
@@ -274,7 +269,6 @@ export const RegistrationForm = ({
               if (files) {
                 setDniSelfie(files[0]);
                 blobFile = await fileToBlob(files[0]);
-                console.log(blobFile);
 
                 const formData = new FormData();
                 formData.append("blobFile", blobFile, files[0].name);
@@ -389,7 +383,6 @@ export const RegistrationForm = ({
               if (files) {
                 setServiceImg(files[0]);
                 blobFile = await fileToBlob(files[0]);
-                console.log(blobFile);
 
                 const formData = new FormData();
                 formData.append("blobFile", blobFile, files[0].name);
@@ -425,8 +418,6 @@ export const RegistrationForm = ({
                   servicePicture: serviceImgUrl,
                 }),
               });
-
-              console.log(response);
             }}
           >
             Registrarse
