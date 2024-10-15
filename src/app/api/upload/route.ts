@@ -16,21 +16,21 @@ export async function PUT(request: Request) {
     console.log("blob endpoint file:", blobFile);
   }
 
-  return NextResponse.json("uploaded");
+  try {
+    const fileName = nanoid();
 
-  //   try {
-  //     const fileName = nanoid();
+    const blob = await put(fileName, blobFile as Blob, {
+      access: "public",
+      contentType: "",
+    });
 
-  //     const blob = await put(fileName, data as Blob, {
-  //       access: "public",
-  //       contentType: "",
-  //     });
+    console.log(blob.url);
 
-  //     console.log(blob.url);
+    return NextResponse.json(blob.url);
+  } catch (err) {
+    console.log("error in try catch");
+    console.error(err);
 
-  //     return Response.json(blob.url);
-  //   } catch (err) {
-  //     console.log("error in try catch");
-  //     console.error(err);
-  //   }
+    return NextResponse.json({ message: "Upload failed", error: err });
+  }
 }

@@ -3,7 +3,7 @@ import prisma from "../../../../db";
 import { Customer } from "@prisma/client";
 
 export async function POST(req: NextRequest) {
-  const { data } = await req.json();
+  const data = await req.json();
 
   console.log("form data =>", data);
 

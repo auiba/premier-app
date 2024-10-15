@@ -19,9 +19,10 @@ export const RegistrationForm = ({
     name: "",
     lastName: "",
     birth: "",
-    sex: "",
+    gender: "",
+    dni: "",
     civil: "",
-    politicalExposure: "",
+    politicalExposure: false,
     address: "",
     floor: "",
     apartment: "",
@@ -32,6 +33,12 @@ export const RegistrationForm = ({
   const [dniFront, setDniFront] = useState<File | undefined>(undefined);
   const [dniBack, setDniBack] = useState<File | undefined>(undefined);
   const [dniSelfie, setDniSelfie] = useState<File | undefined>(undefined);
+  const [serviceImg, setServiceImg] = useState<File | undefined>(undefined);
+
+  const [dniFrontUrl, setDniFrontUrl] = useState<string | undefined>("");
+  const [dniBackUrl, setDniBackUrl] = useState<string | undefined>("");
+  const [dniSelfieUrl, setDniSelfieUrl] = useState<string | undefined>("");
+  const [serviceImgUrl, setServiceImgUrl] = useState<string | undefined>("");
 
   const [step, setStep] = useState<number>(1);
 
@@ -77,23 +84,29 @@ export const RegistrationForm = ({
             <input
               name="birth"
               className="text-white text-xl w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
-              onChange={(e) => handleChange(e)}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  [e.target.name]: new Date(
+                    e.target.value + "T00:00:00Z"
+                  ).toISOString(),
+                })
+              }
               type="date"
-              value={formData.birth}
             />
           </label>
           <label
             className="flex flex-col justify-center text-gray-300"
-            htmlFor="sex"
+            htmlFor="gender"
           >
             Sexo
             <select
               onChange={(e) =>
-                setFormData({ ...formData, sex: e.target.value })
+                setFormData({ ...formData, gender: e.target.value })
               }
               className="text-white text-lg w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
-              name="sex"
-              value={formData.sex}
+              name="gender"
+              value={formData.gender}
             >
               <option value={""}>Elige una opción</option>
               <option value={"M"}>Masculino</option>
@@ -130,18 +143,30 @@ export const RegistrationForm = ({
           >
             Exposición política
             <select
-              onChange={(e) =>
-                setFormData({ ...formData, politicalExposure: e.target.value })
-              }
+              onChange={(e) => {
+                if (e.target.value == "Y") {
+                  setFormData({ ...formData, politicalExposure: true });
+                } else {
+                  setFormData({ ...formData, politicalExposure: false });
+                }
+              }}
               className="text-white text-lg w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
               name="politicalExposure"
-              value={formData.politicalExposure}
+              value={formData.politicalExposure ? "Y" : "N"}
             >
               <option value={""}>Elige una opción</option>
               <option value={"Y"}>Sí</option>
               <option value={"N"}>No</option>
             </select>
           </label>
+          <TextInput
+            name="dni"
+            htmlfor="dni"
+            handleChange={handleChange}
+            labelText="DNI"
+            value={formData.dni}
+            ph="45408559G"
+          />
           <h3>
             A continuación deberás enviarnos las siguientes imágenes de carácter
             obligatorio:
@@ -164,6 +189,7 @@ export const RegistrationForm = ({
 
               let blobFile;
               if (files) {
+                setDniFront(files[0]);
                 blobFile = await fileToBlob(files[0]);
                 console.log(blobFile);
 
@@ -174,13 +200,12 @@ export const RegistrationForm = ({
                   method: "PUT",
                   body: formData,
                 });
-              }
-              // Upload to vercel blob storage, THEN use the retrieved url and assign it to state
-              // so it can be sent as user registration to api endpoint
 
-              // if (files && files?.length > 0) {
-              //   setDniFront(files[0]);
-              // }
+                const dataz = await blobUpload.json();
+
+                setDniFrontUrl(dataz);
+                console.log("blob upload resposnse =>", dataz);
+              }
             }}
           />
           {dniFront && (
@@ -205,6 +230,7 @@ export const RegistrationForm = ({
 
               let blobFile;
               if (files) {
+                setDniBack(files[0]);
                 blobFile = await fileToBlob(files[0]);
                 console.log(blobFile);
 
@@ -215,12 +241,13 @@ export const RegistrationForm = ({
                   method: "PUT",
                   body: formData,
                 });
+
+                const dataz = await blobUpload.json();
+
+                setDniBackUrl(dataz);
               }
               // Upload to vercel blob storage, THEN use the retrieved url and assign it to state
               // so it can be sent as user registration to api endpoint
-              // if (files && files?.length > 0) {
-              //   setDniBack(files[0]);
-              // }
             }}
           />
           {dniBack && (
@@ -245,6 +272,7 @@ export const RegistrationForm = ({
 
               let blobFile;
               if (files) {
+                setDniSelfie(files[0]);
                 blobFile = await fileToBlob(files[0]);
                 console.log(blobFile);
 
@@ -255,11 +283,10 @@ export const RegistrationForm = ({
                   method: "PUT",
                   body: formData,
                 });
-              }
 
-              // if (files && files?.length > 0) {
-              //   setDniSelfie(files[0]);
-              // }
+                const dataz = await blobUpload.json();
+                setDniSelfieUrl(dataz);
+              }
             }}
           />
           <span className="ml-2 text-gray-300">{dniSelfie?.name}</span>
@@ -330,7 +357,7 @@ export const RegistrationForm = ({
             Teléfono
             <input
               className="text-white text-xl w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
-              type="number"
+              type="text"
               name="phone"
               value={formData.phone}
               onChange={(e) => {
@@ -360,6 +387,7 @@ export const RegistrationForm = ({
 
               let blobFile;
               if (files) {
+                setServiceImg(files[0]);
                 blobFile = await fileToBlob(files[0]);
                 console.log(blobFile);
 
@@ -370,9 +398,16 @@ export const RegistrationForm = ({
                   method: "PUT",
                   body: formData,
                 });
+
+                const dataz = await blobUpload.json();
+
+                setServiceImgUrl(dataz);
               }
             }}
           />
+          {serviceImg && (
+            <span className="ml-2 text-gray-300">{serviceImg?.name}</span>
+          )}
 
           <button
             className="flex w-3/4 items-center font-bold text-lg justify-center text-center rounded p-4 h-12  bg-[#00c26ebe] mt-4"
@@ -380,7 +415,15 @@ export const RegistrationForm = ({
               e.preventDefault();
               const response = await fetch("/api/customer", {
                 method: "POST",
-                body: JSON.stringify({ ...formData, email: sessionEmail }),
+                body: JSON.stringify({
+                  ...formData,
+                  floor: Number(formData.floor),
+                  email: sessionEmail,
+                  dniPicture: dniFrontUrl,
+                  dniBackPicture: dniBackUrl,
+                  selfie: dniSelfieUrl,
+                  servicePicture: serviceImgUrl,
+                }),
               });
 
               console.log(response);
