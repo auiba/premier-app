@@ -92,8 +92,6 @@ export const RegistrationForm = ({
                   ).toISOString(),
                 })
               }
-              onChange={(e) => handleChange(e)}
-              name="birth"
               type="date"
             />
           </label>
