@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { TextInput } from "./Input";
 import uploadArrow from "../../../public/imgs/icons/uploadarrow.svg";
+import { useRouter } from "next/navigation";
+
 import Image from "next/image";
 
 // #00c26f green
@@ -42,9 +44,13 @@ export const RegistrationForm = ({
 
   const [step, setStep] = useState<number>(1);
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const router = useRouter();
 
   return (
     <form
@@ -403,9 +409,11 @@ export const RegistrationForm = ({
           )}
 
           <button
+            disabled={loading}
             className="flex w-3/4 items-center font-bold text-lg justify-center text-center rounded p-4 h-12  bg-[#00c26ebe] mt-4"
             onClick={async (e) => {
               e.preventDefault();
+              setLoading(true);
               const response = await fetch("/api/customer", {
                 method: "POST",
                 body: JSON.stringify({
@@ -418,9 +426,13 @@ export const RegistrationForm = ({
                   servicePicture: serviceImgUrl,
                 }),
               });
+              setLoading(false);
+              if (response.status == 200) {
+                router.push("/exclusive");
+              }
             }}
           >
-            Registrarse
+            {loading ? "Registrando..." : "Registrarse"}
           </button>
         </>
       )}
