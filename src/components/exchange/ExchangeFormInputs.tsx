@@ -156,7 +156,7 @@ export const ReceiveInput = ({
       <div className="flex py-2 items-center rounded justify-center h-16 w-[325px] bg-[#3e3e59] border-[1px] border-gray-600">
         <div className="text-white text-xl w-[225px] p-2 rounded m-1 bg-[#3e3e59]">
           {loading ? (
-            <Image src={loadingGif} height={30} width={35} alt="" />
+            <Image unoptimized src={loadingGif} height={30} width={35} alt="" />
           ) : (
             receive
           )}

@@ -1,0 +1,40 @@
+"use client";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+// Redirecting user after a couple of seconds so Vera/Adinet dont burn the token
+export const RedirectFromClient = ({
+  email,
+  token,
+}: {
+  email?: string;
+  token?: string;
+}) => {
+  const [time, setTime] = useState<number>(3);
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log(time);
+    const intervalId = window.setInterval(() => {
+      if (time > 0) {
+        setTime((prevTime) => prevTime - 1); // Update time every second
+      } else {
+        return;
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [time]);
+
+  setTimeout(() => {
+    router.push(
+      `${baseUrl}api/auth/callback/resend?callbackUrl=${baseUrl}crear-proveedor&token=${token}&email=${email}`
+    );
+  }, 3500);
+
+  return (
+    <div className="text-black m-2 text-2xl">{time > 0 ? time : "Vamos!"}</div>
+  );
+};
