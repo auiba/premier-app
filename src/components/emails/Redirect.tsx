@@ -12,7 +12,7 @@ export const RedirectFromClient = ({
   email?: string;
   token?: string;
 }) => {
-  const [time, setTime] = useState<number>(3);
+  const [time, setTime] = useState<number>(10);
   const router = useRouter();
 
   useEffect(() => {
@@ -30,11 +30,13 @@ export const RedirectFromClient = ({
 
   setTimeout(() => {
     router.push(
-      `${baseUrl}api/auth/callback/resend?callbackUrl=${baseUrl}crear-proveedor&token=${token}&email=${email}`
+      `${baseUrl}api/auth/callback/resend?callbackUrl=${baseUrl}registrarse&token=${token}&email=${email}`
     );
-  }, 3500);
+  }, 10000);
 
   return (
-    <div className="text-black m-2 text-2xl">{time > 0 ? time : "Vamos!"}</div>
+    <div className="text-green-400 m-2 text-2xl">
+      {time > 0 ? time : "Vamos!"}
+    </div>
   );
 };

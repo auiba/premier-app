@@ -7,6 +7,8 @@ const resend = new Resend(process.env.AUTH_RESEND_KEY);
 export async function POST(req: Request) {
   const { email, subject, tkn } = await req.json();
 
+  console.log("Trying emails POST route...", email, subject, tkn);
+
   if (!tkn) {
     return NextResponse.json(
       { message: "Token is missing in the URL." },
@@ -16,7 +18,7 @@ export async function POST(req: Request) {
   console.log("token on route", tkn);
   try {
     const emailRequest = await resend.emails.send({
-      from: "Retroka <hola@retroka.com>", //
+      from: "Premierapp <hola@premier.nitsuga.dev>", //
       to: [email],
       subject: subject,
       react: SignInEmail({ email: email, token: tkn }),
