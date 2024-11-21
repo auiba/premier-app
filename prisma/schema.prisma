@@ -2,11 +2,30 @@
 
 datasource db {
   provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  url = env("LOCAL_DATABASE_URL") // uses connection pooling
 }
 
 generator client {
   provider = "prisma-client-js"
+}
+
+model Crypto {
+      id           Int       @id @default(autoincrement())
+      name String
+      crypto String
+      commission Int
+      fee Int
+}
+
+model Transaction {
+    id           Int       @id @default(autoincrement())
+    date  DateTime
+    email String
+    send Float
+    sendCurrency String
+    receive Float
+    receiveCurrency String
+    phone String
 }
 
 model Customer {
