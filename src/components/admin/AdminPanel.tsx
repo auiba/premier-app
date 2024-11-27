@@ -39,8 +39,9 @@ export function AdminPanel() {
       <ul className="flex items-center justify-center gap-4">
         <li
           className={`${
-            selected === "transactions" && "text-gray-400"
-          }  text-xl`}
+            selected === "transactions" &&
+            "text-gray-400 border-b-2 border-gray-400"
+          }  text-xl  p-2`}
         >
           <button
             disabled={selected === "transactions"}
@@ -52,7 +53,11 @@ export function AdminPanel() {
             Transacciones
           </button>
         </li>
-        <li className={`${selected === "cryptos" && "text-gray-400"}  text-xl`}>
+        <li
+          className={`${
+            selected === "cryptos" && "text-gray-400 border-b-2 border-gray-400"
+          }  p-2 text-xl`}
+        >
           <button
             disabled={selected === "cryptos"}
             onClick={(e) => {
