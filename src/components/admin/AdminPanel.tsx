@@ -31,7 +31,14 @@ export function AdminPanel() {
         />
         <button
           className="border-[1px] border-white p-1 rounded"
-          onClick={(e) => e.preventDefault()}
+          onClick={async (e) => {
+            e.preventDefault();
+
+            const updatePhone = await fetch("/api/admin/phone", {
+              method: "PATCH",
+              body: JSON.stringify({ phone: adminPhone }),
+            });
+          }}
         >
           Actualizar
         </button>

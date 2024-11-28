@@ -9,6 +9,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model AdminPhone {
+        id           Int       @id @default(autoincrement())
+        phone String
+}
+
 
 model Crypto {
       id           Int       @id @default(autoincrement())
