@@ -1,10 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Crypto } from "./CryptoItem";
 import { TextInput } from "../registration/Input";
 
-export const AddCrypto = ({ close }: { close: Function }) => {
+export const AddCrypto = ({
+  close,
+  onAdd,
+}: {
+  close: Function;
+  onAdd: Function;
+}) => {
   const [cryptoValues, setCryptoValues] = useState({
     name: "",
     cripto: "",
@@ -24,7 +29,7 @@ export const AddCrypto = ({ close }: { close: Function }) => {
 
   return (
     <div>
-      <form>
+      <form className="flex flex-col items-center justify-center gap-2">
         <label
           className="flex flex-col items-start justify-center text-gray-600"
           htmlFor={"name"}
@@ -100,15 +105,22 @@ export const AddCrypto = ({ close }: { close: Function }) => {
           />
         </label>
         <button
-          onClick={(e) => {
+          className="p-1 rounded border-2 border-black"
+          onClick={async (e) => {
             e.preventDefault();
-            console.log("kek");
+
             // Send POST request here
+            await onAdd({
+              name: cryptoValues.name,
+              crypto: cryptoValues.cripto,
+              commission: cryptoValues.comm,
+              fee: cryptoValues.fee,
+            });
 
             close();
           }}
         >
-          Listo
+          Agregar
         </button>
       </form>
     </div>

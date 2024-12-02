@@ -1,17 +1,16 @@
 import { useState, useCallback } from "react";
 import { Modal } from "../Modal";
 import { EditCrypto } from "./EditCrypto";
+import { Crypto } from "@prisma/client";
 
-export type Crypto = {
-  id: number;
-  name: string;
-  crypto: string;
-  commission: number;
-  fee: number;
-};
-
-export const CryptoItem = ({ cryptoCurrency }: { cryptoCurrency: Crypto }) => {
-  const { name, crypto, commission, fee } = cryptoCurrency;
+export const CryptoItem = ({
+  cryptoCurrency,
+  onDelete,
+}: {
+  cryptoCurrency: Crypto;
+  onDelete: Function;
+}) => {
+  const { name, crypto, commission, fee, id } = cryptoCurrency;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = useCallback(() => {
@@ -43,10 +42,18 @@ export const CryptoItem = ({ cryptoCurrency }: { cryptoCurrency: Crypto }) => {
         Editar
       </button>
       <Modal title="Editar detalles" isOpen={isModalOpen} onClose={closeModal}>
-        <EditCrypto close={closeModal} crypto={cryptoCurrency} />
+        <EditCrypto close={closeModal} cryptoCurrency={cryptoCurrency} />
       </Modal>
 
-      <button className="h-8 w-8 bg-red-500 rounded">X</button>
+      <button
+        onClick={async (e) => {
+          e.preventDefault();
+          onDelete(cryptoCurrency.id);
+        }}
+        className="h-8 w-8 bg-red-500 rounded"
+      >
+        X
+      </button>
     </ul>
   );
 };

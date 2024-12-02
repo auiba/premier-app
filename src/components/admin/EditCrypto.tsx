@@ -1,32 +1,35 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Crypto } from "./CryptoItem";
+import { Crypto } from "@prisma/client";
 
 export const EditCrypto = ({
-  crypto,
+  cryptoCurrency,
   close,
 }: {
-  crypto: Crypto;
+  cryptoCurrency: Crypto;
   close: Function;
 }) => {
   const [cryptoValues, setCryptoValues] = useState({ comm: 0, fee: 0 });
 
   useEffect(() => {
-    setCryptoValues({ comm: crypto.commission, fee: crypto.fee });
+    setCryptoValues({
+      comm: cryptoCurrency.commission,
+      fee: cryptoCurrency.fee,
+    });
   }, []);
 
   return (
     <div>
-      <form>
+      <form className="gap-2 flex flex-col items-center justify-center">
         <label
           className="flex flex-col items-start justify-center text-gray-600"
           htmlFor="comm"
         >
           Comisión
           <input
-            value={crypto.commission}
-            placeholder={crypto.commission.toString()}
+            value={cryptoCurrency.commission}
+            placeholder={cryptoCurrency.commission.toString() || ""}
             onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
             className="text-white text-lg w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
             onChange={(e) => {
@@ -46,8 +49,8 @@ export const EditCrypto = ({
         >
           Fee
           <input
-            value={crypto.commission}
-            placeholder={crypto.commission.toString()}
+            value={cryptoCurrency.commission}
+            placeholder={cryptoCurrency.commission.toString() || ""}
             onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
             className="text-white text-lg w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
             onChange={(e) => {
@@ -62,15 +65,24 @@ export const EditCrypto = ({
           />
         </label>
         <button
-          onClick={(e) => {
+          className="rounded p-1 border-2 border-black"
+          onClick={async (e) => {
             e.preventDefault();
             console.log("kek");
-            // Send PATCH request here
+
+            const editCrypto = await fetch("/api/admin/cryptos", {
+              method: "PATCH",
+              body: JSON.stringify({
+                commission: cryptoValues.comm,
+                fee: cryptoValues.fee,
+                id: cryptoCurrency.id,
+              }),
+            });
 
             close();
           }}
         >
-          Listo
+          Confirmar
         </button>
       </form>
     </div>

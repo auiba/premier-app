@@ -1,18 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TransactionsTable } from "./TransactionsTable";
 import { CryptosTable } from "./CryptosTable";
 import { fakeTransactions } from "../../../utils/backoffice";
 import { fakeCryptos } from "../../../utils/backoffice";
 import { TextInput } from "../registration/Input";
+import { Transaction, Crypto, AdminPhone } from "@prisma/client";
 
-export function AdminPanel() {
+type PanelProps = {
+  transactions: Transaction[];
+  cryptos: Crypto[];
+  adminPhoneNumber: AdminPhone;
+};
+
+export function AdminPanel({
+  transactions,
+  cryptos,
+  adminPhoneNumber,
+}: PanelProps) {
   const [selected, setSelected] = useState("transactions");
-  const [adminPhone, setAdminPhone] = useState("+5491155837794");
-  // PENDING: Admin phone will actually come from the DB
-  // PENDING: Receiving transactions and cryptos from page.tsx so the request is made from server
-  // and passing these to the proper components
+  const [adminPhone, setAdminPhone] = useState("");
+  const [showMessage, setShowMessage] = useState<boolean>(false);
+
+  useEffect(() => {
+    setAdminPhone(adminPhoneNumber.phone);
+  }, [adminPhoneNumber]);
+
+  // Show 'phone updated' message
+  const flashMessage = () => {
+    setShowMessage(true);
+    setTimeout(() => {
+      setShowMessage(false);
+    }, 1500);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAdminPhone(e.target.value);
@@ -38,10 +59,21 @@ export function AdminPanel() {
               method: "PATCH",
               body: JSON.stringify({ phone: adminPhone }),
             });
+
+            if (updatePhone.status == 200) {
+              flashMessage();
+            }
           }}
         >
           Actualizar
         </button>
+        <p
+          className={`${
+            showMessage ? "block" : "invisible"
+          } text-green-600 text-md`}
+        >
+          ✔ Teléfono actualizado
+        </p>
       </form>
       <ul className="flex items-center justify-center gap-4">
         <li
@@ -77,9 +109,9 @@ export function AdminPanel() {
         </li>
       </ul>
       {selected == "transactions" && (
-        <TransactionsTable transactions={fakeTransactions} />
+        <TransactionsTable transactions={transactions} />
       )}
-      {selected == "cryptos" && <CryptosTable cryptos={fakeCryptos} />}
+      {selected == "cryptos" && <CryptosTable cryptos={cryptos} />}
     </section>
   );
 }
