@@ -6,9 +6,11 @@ import { Crypto } from "@prisma/client";
 export const EditCrypto = ({
   cryptoCurrency,
   close,
+  onEdit,
 }: {
   cryptoCurrency: Crypto;
   close: Function;
+  onEdit: Function;
 }) => {
   const [cryptoValues, setCryptoValues] = useState({ comm: 0, fee: 0 });
 
@@ -28,7 +30,7 @@ export const EditCrypto = ({
         >
           Comisión
           <input
-            value={cryptoCurrency.commission}
+            value={cryptoValues.comm}
             placeholder={cryptoCurrency.commission.toString() || ""}
             onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
             className="text-white text-lg w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
@@ -49,7 +51,7 @@ export const EditCrypto = ({
         >
           Fee
           <input
-            value={cryptoCurrency.commission}
+            value={cryptoValues.fee}
             placeholder={cryptoCurrency.commission.toString() || ""}
             onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
             className="text-white text-lg w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
@@ -78,6 +80,9 @@ export const EditCrypto = ({
                 id: cryptoCurrency.id,
               }),
             });
+
+            const editedCrypto = await editCrypto.json();
+            await onEdit(editedCrypto);
 
             close();
           }}

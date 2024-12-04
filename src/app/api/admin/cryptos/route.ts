@@ -41,10 +41,7 @@ export async function PATCH(req: NextRequest) {
     });
 
     console.log("updated crypto", updatedCrypto);
-    return NextResponse.json(
-      { message: "Crypto updated successfully" },
-      { status: 200 }
-    );
+    return NextResponse.json(updatedCrypto, { status: 200 });
   } catch (error) {
     console.error("Error updating crypto", error);
 

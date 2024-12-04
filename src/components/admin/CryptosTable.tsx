@@ -43,8 +43,21 @@ export const CryptosTable = ({ cryptos }: { cryptos: Crypto[] }) => {
     setCryptosList([...cryptosList!, newCryptoData]);
   };
 
+  const handleUpdate = (updatedCrypto: Crypto) => {
+    setCryptosList((prev) =>
+      prev?.map((crypto) =>
+        crypto.id === updatedCrypto.id ? updatedCrypto : crypto
+      )
+    );
+  };
+
   const cryptosListItems = cryptosList?.map((crypto, id) => (
-    <CryptoItem onDelete={handleDelete} key={id} cryptoCurrency={crypto} />
+    <CryptoItem
+      onEdit={handleUpdate}
+      onDelete={handleDelete}
+      key={id}
+      cryptoCurrency={crypto}
+    />
   ));
   return (
     <div className="flex flex-col items-center justify-center gap-2 w-full">

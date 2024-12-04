@@ -6,9 +6,11 @@ import { Crypto } from "@prisma/client";
 export const CryptoItem = ({
   cryptoCurrency,
   onDelete,
+  onEdit,
 }: {
   cryptoCurrency: Crypto;
   onDelete: Function;
+  onEdit: Function;
 }) => {
   const { name, crypto, commission, fee, id } = cryptoCurrency;
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,7 +44,11 @@ export const CryptoItem = ({
         Editar
       </button>
       <Modal title="Editar detalles" isOpen={isModalOpen} onClose={closeModal}>
-        <EditCrypto close={closeModal} cryptoCurrency={cryptoCurrency} />
+        <EditCrypto
+          onEdit={onEdit}
+          close={closeModal}
+          cryptoCurrency={cryptoCurrency}
+        />
       </Modal>
 
       <button
