@@ -1,6 +1,5 @@
 import { VipExchangeForm } from "@/components/exchange/VipExchangeForm";
 import {
-  getConstants,
   getDollar,
   getAllConstants,
   calculateExchange,
@@ -28,16 +27,9 @@ export default async function ExchangePage() {
   if (customerInfo?.email !== userEmail) {
     redirect("/");
   }
-  const formInfo = await Promise.allSettled([
-    getConstants(apiUrl!, apiKey!),
-    getDollar(apiUrl!, apiKey!),
-    getAllConstants(apiUrl!, apiKey!),
-  ]);
+  const formInfo = await Promise.allSettled([getDollar(), getAllConstants()]);
 
-  const [constantsResult, dollarResult, allConstants] = formInfo;
-
-  const constants =
-    constantsResult.status == "fulfilled" && constantsResult.value;
+  const [dollarResult, allConstants] = formInfo;
 
   const dollarPrice = dollarResult.status == "fulfilled" && dollarResult.value;
   const allConsts = allConstants.status == "fulfilled" && allConstants.value;

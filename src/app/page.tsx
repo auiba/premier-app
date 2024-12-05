@@ -1,6 +1,5 @@
 import { ExchangeForm } from "@/components/exchange/Form";
 import {
-  getConstants,
   getDollar,
   getAllConstants,
   calculateExchange,
@@ -9,20 +8,10 @@ import { DollarPrice } from "@/components/exchange/DollarPrice";
 import { Suspense } from "react";
 import LoadingSkeleton from "./loading";
 
-const apiUrl = process.env.API_URL;
-const apiKey = process.env.API_SIGNATURE;
-
 export default async function ExchangePage() {
-  const formInfo = await Promise.allSettled([
-    getConstants(apiUrl!, apiKey!),
-    getDollar(apiUrl!, apiKey!),
-    getAllConstants(apiUrl!, apiKey!),
-  ]);
+  const formInfo = await Promise.allSettled([getDollar(), getAllConstants()]);
 
-  const [constantsResult, dollarResult, allConstants] = formInfo;
-
-  const constants =
-    constantsResult.status == "fulfilled" && constantsResult.value;
+  const [dollarResult, allConstants] = formInfo;
 
   const dollarPrice = dollarResult.status == "fulfilled" && dollarResult.value;
   const allConsts = allConstants.status == "fulfilled" && allConstants.value;

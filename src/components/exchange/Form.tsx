@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import { SendInput, ReceiveInput } from "./ExchangeFormInputs";
 import { useRouter } from "next/navigation";
-import { Crypto } from "../../../utils/types";
+import { Crypto } from "@prisma/client";
 
 // "Parent" form component
 
@@ -58,7 +58,7 @@ export const ExchangeForm = ({
           id: "1",
           name: "bitcoin",
           crypto: "btc",
-          comm: "5.00",
+          commission: "5.00",
           fee: "5.00",
         }
       : Array.isArray(cryptos) &&
@@ -119,8 +119,6 @@ export const ExchangeForm = ({
   }, [sendingAmount]);
 
   const fiatOptions = ["usd", "ars"];
-  const cryptoOptions =
-    Array.isArray(cryptos) && cryptos?.map((crypto, id) => crypto.name);
 
   const cashRef = useRef<HTMLInputElement>(null);
 
@@ -134,7 +132,7 @@ export const ExchangeForm = ({
         buying={buying}
         resetAmount={resetAmount}
         sending={sendingAmount as string}
-        cryptoCurrencies={cryptoOptions as string[]}
+        cryptoCurrencies={cryptos}
         fiatCurrencies={fiatOptions}
         setReceivingCurrency={setReceivingCurrency}
         setSendingAmount={setSendingAmount}
@@ -144,8 +142,8 @@ export const ExchangeForm = ({
         <div className="-ml-2">
           <ul className="text-[12px]">
             <li>
-              Comisión: {(selectedCurrency && selectedCurrency?.comm) || "5.00"}
-              %
+              Comisión:{" "}
+              {(selectedCurrency && selectedCurrency?.commission) || "5.00"}%
             </li>
             {buying ? (
               <li>
@@ -165,8 +163,8 @@ export const ExchangeForm = ({
             onClick={(e) => {
               e.preventDefault();
               flipCurrencies();
-              setReceivingCurrency("usd");
-              setSendCurrency("btc");
+              // setReceivingCurrency("usd");
+              // setSendCurrency("btc");
               setBuying(false);
             }}
           >
@@ -190,7 +188,7 @@ export const ExchangeForm = ({
       <ReceiveInput
         receive={receiveAmount}
         buying={buying}
-        cryptoCurrencies={cryptoOptions as string[]}
+        cryptoCurrencies={cryptos}
         fiatCurrencies={fiatOptions}
         resetAmount={resetAmount}
         receivingCurrency={receivingCurrency}

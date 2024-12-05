@@ -3,6 +3,7 @@
 import { ChangeEvent, Dispatch, SetStateAction, useCallback } from "react";
 import Image from "next/image";
 import loadingGif from "../../../public/imgs/icons/loading.gif";
+import { Crypto } from "@prisma/client";
 
 // They receive display values from parent form
 // onChange they update the state of parent, which in turn
@@ -12,27 +13,10 @@ import loadingGif from "../../../public/imgs/icons/loading.gif";
 // TO ==> BTC, ETH
 
 // Delayed search after 500ms from last keypress
-function debounce<T extends (...args: any[]) => Promise<void>>(
-  func: T,
-  wait: number
-): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout;
-  return function (this: any, ...args: Parameters<T>) {
-    const context = this;
-    clearTimeout(timeout);
-    timeout = setTimeout(async () => {
-      try {
-        await func.apply(context, args);
-      } catch (error) {
-        console.error("Debounced function error:", error);
-      }
-    }, wait);
-  };
-}
 
 type ExchangeInput = {
   buying: boolean;
-  cryptoCurrencies: any[];
+  cryptoCurrencies: Crypto[];
   fiatCurrencies: any[];
   sending?: string;
   receive?: number;
@@ -55,14 +39,6 @@ export const SendInput = ({
   cryptoCurrencies,
   fiatCurrencies,
 }: ExchangeInput) => {
-  let currencyOptions;
-
-  if (buying) {
-    currencyOptions = fiatCurrencies;
-  } else {
-    currencyOptions = cryptoCurrencies;
-  }
-
   // ChangeEvent<HTMLInputElement>
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -74,17 +50,28 @@ export const SendInput = ({
     }
   };
 
-  const options =
-    Array.isArray(currencyOptions) &&
-    currencyOptions.map((currency, id) => (
-      <option
-        key={id}
-        className="p-2 text-white uppercase bg-[#3e3e59]"
-        value={currency}
-      >
-        {currency}
-      </option>
-    ));
+  const options = buying
+    ? fiatCurrencies.map((curr, id) => (
+        <option
+          key={id}
+          className="p-2 text-white uppercase bg-[#3e3e59]"
+          value={curr}
+        >
+          {curr}
+        </option>
+      ))
+    : cryptoCurrencies.map((currency, id) => {
+        console.log(currency);
+        return (
+          <option
+            key={id}
+            className="p-2 text-white uppercase bg-[#3e3e59]"
+            value={currency.crypto}
+          >
+            {currency.name}
+          </option>
+        );
+      });
 
   return (
     <div className="flex flex-col gap-2">
@@ -131,25 +118,25 @@ export const ReceiveInput = ({
   receivingCurrency,
   loading,
 }: ExchangeInput) => {
-  let currencyOptions;
-
-  if (buying) {
-    currencyOptions = cryptoCurrencies;
-  } else {
-    currencyOptions = fiatCurrencies;
-  }
-
-  const options =
-    Array.isArray(currencyOptions) &&
-    currencyOptions.map((currency, id) => (
-      <option
-        key={id}
-        className="p-2 text-white uppercase bg-[#3e3e59]"
-        value={currency}
-      >
-        {currency}
-      </option>
-    ));
+  const options = !buying
+    ? fiatCurrencies.map((curr, id) => (
+        <option
+          key={id}
+          className="p-2 text-white uppercase bg-[#3e3e59]"
+          value={curr}
+        >
+          {curr}
+        </option>
+      ))
+    : cryptoCurrencies.map((currency, id) => (
+        <option
+          key={id}
+          className="p-2 text-white uppercase bg-[#3e3e59]"
+          value={currency.crypto}
+        >
+          {currency.name}
+        </option>
+      ));
   return (
     <div className="flex flex-col text-white gap-2">
       <h2 className="text-gray-400">Recibes</h2>

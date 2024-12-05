@@ -1,3 +1,5 @@
+import prisma from "../db";
+
 async function makeRequest(
   apiURL: string,
   apiSignature: string,
@@ -36,28 +38,18 @@ export async function calculateExchange(
   return response;
 }
 
-export async function getConstants(apiURL: string, apiSignature: string) {
-  const body = new FormData();
-  body.set("getconstants", "true");
-  const response = await makeRequest(apiURL, apiSignature, body);
+export async function getAllConstants() {
+  const cryptosFromDb = await prisma.crypto.findMany({});
 
-  return response;
+  return cryptosFromDb;
 }
 
-export async function getAllConstants(apiURL: string, apiSignature: string) {
-  const body = new FormData();
-  body.set("getallconstants", "true");
-  const response = await makeRequest(apiURL, apiSignature, body);
+export async function getDollar() {
+  const response = await fetch("https://dolarapi.com/v1/dolares/blue");
 
-  return response;
-}
+  const data = await response.json();
 
-export async function getDollar(apiURL: string, apiSignature: string) {
-  const body = new FormData();
-  body.set("getdollar", "true");
-  const response = await makeRequest(apiURL, apiSignature, body);
-
-  return response;
+  return data;
 }
 
 export async function createUrl(
