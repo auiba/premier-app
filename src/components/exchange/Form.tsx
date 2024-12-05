@@ -32,15 +32,20 @@ export const ExchangeForm = ({
   dollarPrice: { compra: number; venta: number };
   cryptos?: Crypto[];
 }) => {
+  const [buying, setBuying] = useState<boolean>(true);
   const [sendingAmount, setSendingAmount] = useState<string>("");
-  const [sendCurrency, setSendCurrency] = useState<string>("usd");
+  const [sendCurrency, setSendCurrency] = useState<string>(
+    buying ? "usd" : "btc"
+  );
   const [receiveAmount, setReceiveAmount] = useState(0);
-  const [receivingCurrency, setReceivingCurrency] = useState("btc");
+  const [receivingCurrency, setReceivingCurrency] = useState(
+    buying ? "btc" : "usd"
+  );
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [account, setAccount] = useState<string>("");
-  const [buying, setBuying] = useState<boolean>(true);
+
   const [cash, setCash] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -52,25 +57,13 @@ export const ExchangeForm = ({
 
   // Selected currency OR bitcoin if nothing has been selected (first load)
 
-  const selectedCurrency =
-    Array.isArray(cryptos) && buying
-      ? cryptos?.find((crypto) => crypto.name == receivingCurrency) || {
-          id: "1",
-          name: "bitcoin",
-          crypto: "btc",
-          commission: "5.00",
-          fee: "5.00",
-        }
-      : Array.isArray(cryptos) &&
-        cryptos?.find((crypto) => crypto.name == sendCurrency);
+  const selectedCurrency = buying
+    ? cryptos?.find(
+        (crypto) => crypto.crypto == receivingCurrency.toUpperCase()
+      )
+    : cryptos?.find((crypto) => crypto.crypto == sendCurrency);
 
-  console.log("selectedcurr", selectedCurrency);
-  const flipCurrencies = () => {
-    setSendingAmount("");
-    setReceiveAmount(0);
-    setSendCurrency(receivingCurrency);
-    setReceivingCurrency(sendCurrency);
-  };
+  // console.log("selectedcurr", selectedCurrency);
 
   const resetAmount = () => {
     setSendingAmount("");
@@ -118,7 +111,24 @@ export const ExchangeForm = ({
     setLoading(false);
   }, [sendingAmount]);
 
+  useEffect(() => {
+    // When buying mode changes, enforce correct currencies
+    if (buying) {
+      setSendCurrency("usd");
+      setReceivingCurrency("btc");
+      setSendingAmount("");
+      setReceiveAmount(0);
+    } else {
+      setSendCurrency("btc");
+      setReceivingCurrency("usd");
+      setSendingAmount("");
+      setReceiveAmount(0);
+    }
+  }, [buying]);
+
   const fiatOptions = ["usd", "ars"];
+  const cryptoOptions =
+    Array.isArray(cryptos) && cryptos?.map((crypto, id) => crypto.name);
 
   const cashRef = useRef<HTMLInputElement>(null);
 
@@ -132,6 +142,7 @@ export const ExchangeForm = ({
         buying={buying}
         resetAmount={resetAmount}
         sending={sendingAmount as string}
+        sendCurrency={sendCurrency}
         cryptoCurrencies={cryptos}
         fiatCurrencies={fiatOptions}
         setReceivingCurrency={setReceivingCurrency}
@@ -162,10 +173,8 @@ export const ExchangeForm = ({
             } rounded p-1 font-medium`}
             onClick={(e) => {
               e.preventDefault();
-              flipCurrencies();
-              // setReceivingCurrency("usd");
-              // setSendCurrency("btc");
               setBuying(false);
+              // flipCurrencies();
             }}
           >
             Vender
@@ -176,9 +185,9 @@ export const ExchangeForm = ({
             } rounded p-1 font-medium`}
             onClick={(e) => {
               e.preventDefault();
-              flipCurrencies();
-              setCash(false);
               setBuying(true);
+              // flipCurrencies();
+              setCash(false);
             }}
           >
             Comprar
@@ -190,6 +199,7 @@ export const ExchangeForm = ({
         buying={buying}
         cryptoCurrencies={cryptos}
         fiatCurrencies={fiatOptions}
+        sendCurrency={sendCurrency}
         resetAmount={resetAmount}
         receivingCurrency={receivingCurrency}
         setReceivingCurrency={setReceivingCurrency}

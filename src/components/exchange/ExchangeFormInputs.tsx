@@ -52,26 +52,15 @@ export const SendInput = ({
 
   const options = buying
     ? fiatCurrencies.map((curr, id) => (
-        <option
-          key={id}
-          className="p-2 text-white uppercase bg-[#3e3e59]"
-          value={curr}
-        >
-          {curr}
+        <option key={id} value={curr.toLowerCase()}>
+          {curr.toUpperCase()}
         </option>
       ))
-    : cryptoCurrencies.map((currency, id) => {
-        console.log(currency);
-        return (
-          <option
-            key={id}
-            className="p-2 text-white uppercase bg-[#3e3e59]"
-            value={currency.crypto}
-          >
-            {currency.name}
-          </option>
-        );
-      });
+    : cryptoCurrencies.map((currency, id) => (
+        <option key={id} value={currency.crypto.toLowerCase()}>
+          {currency.name}
+        </option>
+      ));
 
   return (
     <div className="flex flex-col gap-2">
@@ -90,12 +79,12 @@ export const SendInput = ({
           />
         </label>
         <select
-          value={sendCurrency}
+          value={sendCurrency?.toLowerCase()}
           className="p-2 text-white text-xl bg-[#36324a] border-[1px] rounded border-gray-600  h-16 w-32 uppercase -ml-[12px]"
           onChange={(e) => {
             e.preventDefault();
             resetAmount();
-            setSendingCurrency(e.target.value);
+            setSendingCurrency(e.target.value.toLowerCase());
           }}
           name="send"
           id="send"
@@ -120,23 +109,16 @@ export const ReceiveInput = ({
 }: ExchangeInput) => {
   const options = !buying
     ? fiatCurrencies.map((curr, id) => (
-        <option
-          key={id}
-          className="p-2 text-white uppercase bg-[#3e3e59]"
-          value={curr}
-        >
-          {curr}
+        <option key={id} value={curr.toLowerCase()}>
+          {curr.toUpperCase()}
         </option>
       ))
     : cryptoCurrencies.map((currency, id) => (
-        <option
-          key={id}
-          className="p-2 text-white uppercase bg-[#3e3e59]"
-          value={currency.crypto}
-        >
+        <option key={id} value={currency.crypto.toLowerCase()}>
           {currency.name}
         </option>
       ));
+
   return (
     <div className="flex flex-col text-white gap-2">
       <h2 className="text-gray-400">Recibes</h2>
@@ -154,10 +136,11 @@ export const ReceiveInput = ({
           onChange={(e) => {
             e.preventDefault();
             resetAmount();
-            setReceivingCurrency(e.target.value);
+            setReceivingCurrency(e.target.value.toLowerCase());
           }}
           name="receive"
           id="receive"
+          value={receivingCurrency?.toLowerCase()}
         >
           {options}
         </select>
