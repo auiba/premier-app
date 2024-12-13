@@ -300,6 +300,7 @@ export const ExchangeForm = ({
               from: sendCurrency,
               to: receivingCurrency,
               price: sendingAmount,
+              receive: receiveAmount,
               name: name,
               email: email,
               bankstring: account,
@@ -307,8 +308,8 @@ export const ExchangeForm = ({
             }),
           });
 
-          // const data = await response.json();
-          console.log("response", await response.json());
+          const data = await response.json();
+          router.push(data);
         }}
       >
         {buying ? "Comprar" : "Vender"}

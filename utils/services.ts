@@ -69,7 +69,7 @@ export async function createUrl(
 
   const wspBaseUrl = "https://wa.me/";
 
-  const msgUrl = `${wspBaseUrl}${whatsapp}?text=${encodedMessage}.`;
+  const msgUrl = `${wspBaseUrl}${whatsapp}?text=${encodedMessage}`;
 
   return msgUrl;
 }
