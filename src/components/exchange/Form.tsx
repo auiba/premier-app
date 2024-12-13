@@ -235,10 +235,13 @@ export const ExchangeForm = ({
       </label>
       <label className="flex flex-col mt-4" htmlFor="phone">
         Número de WhatsApp *
+        <span className="text-sm text-gray-300">
+          (Formato internacional, sin guiones, paréntesis ni espacios)
+        </span>
         <input
           onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
           onChange={(e) => setPhone(e.target.value)}
-          placeholder="+5496319426789"
+          placeholder="541148134505"
           className="w-[325px] rounded h-10 p-2 bg-[#3e3e59]"
           id="phone"
           name="phone"
@@ -304,9 +307,8 @@ export const ExchangeForm = ({
             }),
           });
 
-          const data =
-            response &&
-            (await response.json().then((urlData) => router.push(urlData.url)));
+          // const data = await response.json();
+          console.log("response", await response.json());
         }}
       >
         {buying ? "Comprar" : "Vender"}

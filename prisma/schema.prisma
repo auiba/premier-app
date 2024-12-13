@@ -32,6 +32,7 @@ model Transaction {
     receive Float
     receiveCurrency String
     phone String
+    bankstring String?
 }
 
 model Customer {

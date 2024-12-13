@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
   if (from === "ars") {
     console.log("EN ARGS");
-    const dollarPrices = await getDollar(apiUrl!, apiKey!);
+    const dollarPrices = await getDollar();
 
     const dollar: number = dollarPrices.venta;
     const amount = Number(price) / dollar;
@@ -20,8 +20,6 @@ export async function POST(req: NextRequest) {
     try {
       console.log("try calling service AGAIN...");
       const data = await createUrl(
-        apiUrl!,
-        apiKey!,
         "usd",
         to,
         amount,
@@ -30,6 +28,8 @@ export async function POST(req: NextRequest) {
         bankstring,
         phone
       );
+
+      // Create transaction pending
 
       return NextResponse.json(data);
     } catch (err) {
@@ -42,8 +42,6 @@ export async function POST(req: NextRequest) {
   try {
     console.log("try calling service AGAIN...");
     const data = await createUrl(
-      apiUrl!,
-      apiKey!,
       from,
       to,
       price,
@@ -52,6 +50,8 @@ export async function POST(req: NextRequest) {
       bankstring,
       phone
     );
+
+    // Create transaction pending
 
     return NextResponse.json(data);
   } catch (err) {

@@ -52,9 +52,8 @@ export async function getDollar() {
   return data;
 }
 
+// Crea la url para el mensaje de whatsapp
 export async function createUrl(
-  apiURL: string,
-  apiSignature: string,
   from: string,
   to: string,
   price: number,
@@ -64,19 +63,13 @@ export async function createUrl(
   whatsapp: string
 ) {
   const textPrice = price.toString();
-  const body = new FormData();
-  body.set("createurl", "true");
-  body.set("from", from);
-  body.set("to", to);
-  body.set("price", textPrice);
-  body.set("name", name);
-  body.set("email", email);
-  body.set("bankstring", bankstring);
-  body.set("whatsapp", whatsapp);
 
-  const response = await makeRequest(apiURL, apiSignature, body);
+  const message = `Hola, soy ${name} y quiero cambiar ${textPrice} ${from} a ${to}.`;
+  const encodedMessage = encodeURIComponent(message);
 
-  console.log("creating url response =>", response);
+  const wspBaseUrl = "https://wa.me/";
 
-  return response;
+  const msgUrl = `${wspBaseUrl}${whatsapp}?text=${encodedMessage}.`;
+
+  return msgUrl;
 }
