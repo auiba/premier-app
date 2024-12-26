@@ -33,7 +33,24 @@ model Transaction {
     receiveCurrency String
     phone String
     bankstring String?
+    trackingUrl String?
 }
+
+model Ticket {
+ id           Int       @id @default(autoincrement())
+  date  DateTime
+  email String
+  send Float
+  sendCurrency String
+  receive Float
+  receiveCurrency String
+  phone String
+  bankstring String?
+  createdAt DateTime @default(now())
+  trackingUrl String?
+
+}
+
 
 model Customer {
   id           Int       @id @default(autoincrement())

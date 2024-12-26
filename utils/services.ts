@@ -1,5 +1,7 @@
 import prisma from "../db";
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
 async function makeRequest(
   apiURL: string,
   apiSignature: string,
@@ -57,14 +59,16 @@ export async function createUrl(
   from: string,
   to: string,
   price: number,
+  receive: number,
   name: string,
   email: string,
   bankstring: string,
-  whatsapp: string
+  whatsapp: string,
+  ticketId: number
 ) {
   const textPrice = price.toString();
 
-  const message = `Hola, soy ${name} y quiero cambiar ${textPrice} ${from} a ${to}.`;
+  const message = `Va a solicitar pasar ${textPrice}${from} a ${to} y recibirá ${receive}${to}. ${baseUrl}ticket/${ticketId} `;
   const encodedMessage = encodeURIComponent(message);
 
   const wspBaseUrl = "https://wa.me/";

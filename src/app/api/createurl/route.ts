@@ -22,18 +22,7 @@ export async function POST(req: NextRequest) {
     console.log(amount);
     try {
       console.log("try calling service AGAIN...");
-      const data = await createUrl(
-        "usd",
-        to,
-        amount,
-        name,
-        email,
-        bankstring,
-        phone
-      );
-
-      // Create transaction pending
-      const transaction = await prisma.transaction.create({
+      const ticket = await prisma.ticket.create({
         data: {
           date: new Date(),
           email: email,
@@ -46,7 +35,21 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      console.log("transaction =>", transaction);
+      const data = await createUrl(
+        "usd",
+        to,
+        amount,
+        receive,
+        name,
+        email,
+        bankstring,
+        phone,
+        ticket.id
+      );
+
+      // Create transaction pending
+
+      console.log("ticket =>", ticket);
 
       return NextResponse.json(data);
     } catch (err) {
@@ -58,19 +61,8 @@ export async function POST(req: NextRequest) {
 
   try {
     console.log("try calling service AGAIN...");
-    const data = await createUrl(
-      from,
-      to,
-      price,
-      name,
-      email,
-      bankstring,
-      phone
-    );
 
-    // Create transaction pending
-
-    const transaction = await prisma.transaction.create({
+    const ticket = await prisma.ticket.create({
       data: {
         date: new Date(),
         email: email,
@@ -83,7 +75,21 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    console.log("transaction =>", transaction);
+    const data = await createUrl(
+      from,
+      to,
+      price,
+      receive,
+      name,
+      email,
+      bankstring,
+      phone,
+      ticket.id
+    );
+
+    // Create transaction pending
+
+    console.log("transaction =>", ticket);
 
     return NextResponse.json(data);
   } catch (err) {
