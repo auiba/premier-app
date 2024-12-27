@@ -28,7 +28,7 @@ export const TrackingUrlUpdater = ({
             e.preventDefault();
             setTrackerUrl(e.target.value);
           }}
-          className="text-white text-lg w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
+          className="text-white text-md w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
           placeholder={trackingUrl || ""}
           type="text"
         />

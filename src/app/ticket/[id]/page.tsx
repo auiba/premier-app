@@ -5,6 +5,9 @@ import { redirect } from "next/navigation";
 import { isTokenValid } from "../../../../utils/authHelpers";
 import { TrackingUrlUpdater } from "@/components/ticket/UpdateTracking";
 import { TicketButtons } from "@/components/ticket/Buttons";
+import { CopyTextButton } from "@/components/CopyButton";
+import premierlogo from "../../../../public/imgs/icons/premierlogo.png";
+import Image from "next/image";
 
 export default async function Page({
   params,
@@ -28,9 +31,12 @@ export default async function Page({
       <section className="flex min-h-screen flex-col w-full items-center justify-between  bg-[#2b2b36] p-24 pt-4 lg:pt-12">
         <div className="flex flex-col items-start gap-8  bg-white text-black py-10 rounded px-12">
           <div className="flex gap-20 items-start justify-between uppercase">
-            <div className="flex flex-col items-start justify-center font-medium">
-              <p>Premier</p>
-              <span> Tecnologia</span>
+            <div className="flex flex-row items-center justify-center ">
+              <Image alt="logo" width={50} height={50} src={premierlogo} />
+              <div className="flex flex-col items-start justify-center font-medium">
+                <p className="font-bold text-lg">Premier</p>
+                <span className="text-sm font-medium"> Tecnologia</span>
+              </div>
             </div>
             <p>Compra de cripto</p>
           </div>
@@ -43,8 +49,9 @@ export default async function Page({
                 <li>
                   <p>Transacción: {ticketData?.id}</p>
                 </li>
-                <li>
+                <li className="flex flex-row items-center justify-center gap-2">
                   <p>Dirección: {ticketData?.bankstring}</p>
+                  <CopyTextButton text={ticketData?.bankstring || ""} />
                 </li>
                 <li>
                   <p>
@@ -59,11 +66,12 @@ export default async function Page({
                     {ticketData?.sendCurrency}
                   </p>
                 </li>
-                <li>
+                <li className="flex flex-row items-center gap-2">
                   <p>
                     Cantidad: {ticketData?.receive}
-                    {ticketData?.receiveCurrency}{" "}
+                    {ticketData?.receiveCurrency}
                   </p>
+                  <CopyTextButton text={`${ticketData.receive}` || ""} />
                 </li>
               </ul>
             ) : (
@@ -72,7 +80,9 @@ export default async function Page({
           </div>
           <TrackingUrlUpdater
             ticketId={ticketData?.id as number}
-            trackingUrl={ticketData?.trackingUrl || "Pegar url de seguimiento"}
+            trackingUrl={
+              ticketData?.trackingUrl || "Esperando url de seguimiento"
+            }
           />
 
           <TicketButtons ticketId={Number(ticketId)} />
@@ -93,9 +103,12 @@ export default async function Page({
       <section className="flex min-h-screen flex-col w-full items-center justify-between  bg-[#2b2b36] p-24 pt-4 lg:pt-12">
         <div className="flex flex-col items-start gap-14  bg-white text-black py-10 rounded px-12">
           <div className="flex gap-20 items-start justify-between uppercase">
-            <div className="flex flex-col items-start justify-center font-medium">
-              <p>Premier</p>
-              <span> Tecnologia</span>
+            <div className="flex flex-row items-center justify-center ">
+              <Image alt="logo" width={50} height={50} src={premierlogo} />
+              <div className="flex flex-col items-start justify-center font-medium">
+                <p className="font-bold text-lg">Premier</p>
+                <span className="text-sm font-medium"> Tecnologia</span>
+              </div>
             </div>
             <p>Compra de cripto</p>
           </div>
@@ -135,21 +148,30 @@ export default async function Page({
               ""
             )}
           </div>
-          <div>
-            <span className="text-sm">URL de seguimiento:</span>
-            <a
-              href={
+          <div className="flex flex-row gap-2 items-center">
+            <div>
+              <span className="text-sm">URL de seguimiento:</span>
+              <a
+                href={
+                  ticketData?.trackingUrl?.startsWith("http")
+                    ? ticketData.trackingUrl
+                    : `https://${ticketData?.trackingUrl}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <p className="text-lg font-medium">
+                  {ticketData?.trackingUrl || "Esperando URL de seguimiento."}
+                </p>
+              </a>
+            </div>
+            <CopyTextButton
+              text={
                 ticketData?.trackingUrl?.startsWith("http")
                   ? ticketData.trackingUrl
                   : `https://${ticketData?.trackingUrl}`
               }
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <p className="text-lg font-medium">
-                {ticketData?.trackingUrl || "Esperando URL de seguimiento."}
-              </p>
-            </a>
+            />
           </div>
           <div className="flex flex-col text-sm">
             <p>
