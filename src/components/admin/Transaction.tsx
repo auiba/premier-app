@@ -38,7 +38,7 @@ export const TransactionItem = ({
         <a
           className="px-2 h-8 border-[1px] border-gray-400 rounded"
           target="_blank"
-          href={`/ticket/${id}`}
+          href={`/transaction/${id}`}
         >
           <span className="text-sm text-gray-400  ">{id}</span>
         </a>

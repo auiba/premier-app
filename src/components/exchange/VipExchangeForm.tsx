@@ -3,9 +3,7 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import { SendInput, ReceiveInput } from "./ExchangeFormInputs";
 import { useRouter } from "next/navigation";
-import { Crypto } from "../../../utils/types";
-
-// "Parent" form component
+import { Crypto } from "@prisma/client";
 
 function debounce<T extends (...args: any[]) => Promise<void>>(
   func: T,
@@ -36,43 +34,28 @@ export const VipExchangeForm = ({
   email: string;
   name: string;
 }) => {
+  const [buying, setBuying] = useState<boolean>(true);
   const [sendingAmount, setSendingAmount] = useState<string>("");
-  const [sendCurrency, setSendCurrency] = useState<string>("usd");
+  const [sendCurrency, setSendCurrency] = useState<string>(
+    buying ? "usd" : "btc"
+  );
   const [receiveAmount, setReceiveAmount] = useState(0);
-  const [receivingCurrency, setReceivingCurrency] = useState("btc");
+  const [receivingCurrency, setReceivingCurrency] = useState(
+    buying ? "btc" : "usd"
+  );
   const [phone, setPhone] = useState<string>("");
   const [account, setAccount] = useState<string>("");
-  const [buying, setBuying] = useState<boolean>(true);
   const [cash, setCash] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
 
-  // const filteredCryptos = cryptos?.filter(
-  //   (crypto) => crypto.name !== "bitco" && crypto.name !== ""
-  // );
-
-  // Selected currency OR bitcoin if nothing has been selected (first load)
-
-  const selectedCurrency =
-    Array.isArray(cryptos) && buying
-      ? cryptos?.find((crypto) => crypto.name == receivingCurrency) || {
-          id: "1",
-          name: "bitcoin",
-          crypto: "btc",
-          comm: "5.00",
-          fee: "5.00",
-        }
-      : Array.isArray(cryptos) &&
-        cryptos?.find((crypto) => crypto.name == sendCurrency);
-
-  console.log("selectedcurr", selectedCurrency);
-  const flipCurrencies = () => {
-    setSendingAmount("");
-    setReceiveAmount(0);
-    setSendCurrency(receivingCurrency);
-    setReceivingCurrency(sendCurrency);
-  };
+  // Selected currency OR bitcoin if nothing has been selected
+  const selectedCurrency = buying
+    ? cryptos?.find(
+        (crypto) => crypto.crypto == receivingCurrency.toUpperCase()
+      )
+    : cryptos?.find((crypto) => crypto.crypto == sendCurrency);
 
   const resetAmount = () => {
     setSendingAmount("");
@@ -86,10 +69,6 @@ export const VipExchangeForm = ({
         receivingCurrency: string,
         value: string
       ) => {
-        // async API service call here
-        // from, to , price (amount)
-        // set parent state to async call result
-
         setLoading(true);
 
         const response = await fetch("/api/calculate", {
@@ -102,14 +81,11 @@ export const VipExchangeForm = ({
         });
 
         const data = await response.json();
-
         setLoading(false);
-        // console.log(data.result);
         setReceiveAmount(data.result);
       },
       300
     ),
-
     []
   );
 
@@ -120,10 +96,22 @@ export const VipExchangeForm = ({
     setLoading(false);
   }, [sendingAmount]);
 
-  const fiatOptions = ["usd", "ars"];
-  const cryptoOptions =
-    Array.isArray(cryptos) && cryptos?.map((crypto, id) => crypto.name);
+  useEffect(() => {
+    // When buying mode changes, enforce correct currencies
+    if (buying) {
+      setSendCurrency("usd");
+      setReceivingCurrency("btc");
+      setSendingAmount("");
+      setReceiveAmount(0);
+    } else {
+      setSendCurrency("btc");
+      setReceivingCurrency("usd");
+      setSendingAmount("");
+      setReceiveAmount(0);
+    }
+  }, [buying]);
 
+  const fiatOptions = ["usd", "ars"];
   const cashRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -136,7 +124,8 @@ export const VipExchangeForm = ({
         buying={buying}
         resetAmount={resetAmount}
         sending={sendingAmount as string}
-        cryptoCurrencies={cryptoOptions as string[]}
+        sendCurrency={sendCurrency}
+        cryptoCurrencies={cryptos}
         fiatCurrencies={fiatOptions}
         setReceivingCurrency={setReceivingCurrency}
         setSendingAmount={setSendingAmount}
@@ -146,8 +135,8 @@ export const VipExchangeForm = ({
         <div className="-ml-2">
           <ul className="text-[12px]">
             <li>
-              Comisión: {(selectedCurrency && selectedCurrency?.comm) || "5.00"}
-              %
+              Comisión:{" "}
+              {(selectedCurrency && selectedCurrency?.commission) || "5.00"}%
             </li>
             {buying ? (
               <li>
@@ -166,9 +155,6 @@ export const VipExchangeForm = ({
             } rounded p-1 font-medium`}
             onClick={(e) => {
               e.preventDefault();
-              flipCurrencies();
-              setReceivingCurrency("usd");
-              setSendCurrency("btc");
               setBuying(false);
             }}
           >
@@ -180,20 +166,21 @@ export const VipExchangeForm = ({
             } rounded p-1 font-medium`}
             onClick={(e) => {
               e.preventDefault();
-              flipCurrencies();
-              setCash(false);
               setBuying(true);
+              setCash(false);
             }}
           >
             Comprar
           </button>
         </div>
       </div>
+
       <ReceiveInput
         receive={receiveAmount}
         buying={buying}
-        cryptoCurrencies={cryptoOptions as string[]}
+        cryptoCurrencies={cryptos}
         fiatCurrencies={fiatOptions}
+        sendCurrency={sendCurrency}
         resetAmount={resetAmount}
         receivingCurrency={receivingCurrency}
         setReceivingCurrency={setReceivingCurrency}
@@ -221,7 +208,6 @@ export const VipExchangeForm = ({
         htmlFor="account"
       >
         {buying ? "Mi billetera de crypto" : "CBU/CVU/Alias para transferencia"}
-
         <input
           onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
           disabled={cash}
@@ -236,6 +222,7 @@ export const VipExchangeForm = ({
           }}
         />
       </label>
+
       {!buying && (
         <label
           className="flex items-center justify-center self-start gap-2 my-4"
@@ -266,6 +253,7 @@ export const VipExchangeForm = ({
               from: sendCurrency,
               to: receivingCurrency,
               price: sendingAmount,
+              receive: receiveAmount,
               name: name,
               email: email,
               bankstring: account,
@@ -273,9 +261,8 @@ export const VipExchangeForm = ({
             }),
           });
 
-          const data =
-            response &&
-            (await response.json().then((urlData) => router.push(urlData.url)));
+          const data = await response.json();
+          router.push(data);
         }}
       >
         {buying ? "Comprar" : "Vender"}

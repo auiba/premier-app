@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { calculateExchange } from "../../../../utils/services";
 import prisma from "../../../../db";
-
-const apiUrl = process.env.API_URL;
-const apiKey = process.env.API_SIGNATURE;
 
 export async function POST(req: NextRequest) {
   const {

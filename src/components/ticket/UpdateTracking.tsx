@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { CopyTextButton } from "../CopyButton";
 
 export const TrackingUrlUpdater = ({
   ticketId,
@@ -20,7 +21,7 @@ export const TrackingUrlUpdater = ({
   return (
     <form>
       <label
-        className="flex flex-col items-start justify-center text-gray-300"
+        className="flex  items-start justify-center text-gray-300"
         htmlFor="tracking-url"
       >
         <input
@@ -31,6 +32,13 @@ export const TrackingUrlUpdater = ({
           className="text-white text-md w-[250px] bg-[#3e3e59] h-10 p-2 rounded m-1"
           placeholder={trackingUrl || ""}
           type="text"
+        />
+        <CopyTextButton
+          text={
+            trackingUrl?.startsWith("http")
+              ? trackingUrl
+              : `https://${trackingUrl}`
+          }
         />
       </label>
       <button

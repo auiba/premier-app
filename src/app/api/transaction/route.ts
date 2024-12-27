@@ -44,16 +44,27 @@ export async function POST(req: NextRequest) {
 
   try {
     const createdTransaction = await prisma.transaction.create({
-      data: transactionData,
+      data: {
+        date: transactionData.date,
+        email: transactionData.email,
+        phone: transactionData.phone,
+        receive: transactionData.receive,
+        receiveCurrency: transactionData.receiveCurrency,
+        send: transactionData.send,
+        sendCurrency: transactionData.sendCurrency,
+        bankstring: transactionData.bankstring,
+        trackingUrl: transactionData.trackingUrl,
+        confirmed: true,
+      },
     });
 
     console.log("transaction created", createdTransaction);
 
-    // const deletedTicket = await prisma.ticket.delete({
-    //   where: { id: ticketId },
-    // });
+    const deletedTicket = await prisma.ticket.delete({
+      where: { id: ticketId },
+    });
 
-    // console.log("Ticket deleted", deletedTicket);
+    console.log("Ticket deleted", deletedTicket);
 
     return NextResponse.json({ status: 200, message: "Transaction created." });
   } catch (error) {

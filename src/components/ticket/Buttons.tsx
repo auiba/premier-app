@@ -27,6 +27,7 @@ export const TicketButtons = ({ ticketId }: { ticketId: number }) => {
         onClose={() => setOpenConfirm(false)}
       >
         <button
+          className="border-2 border-black rounded p-1"
           onClick={async (e) => {
             e.preventDefault();
             const createTransaction = await fetch("/api/transaction", {
@@ -40,6 +41,7 @@ export const TicketButtons = ({ ticketId }: { ticketId: number }) => {
           Confirmar
         </button>
         <button
+          className="border-2 border-black rounded p-1"
           onClick={async (e) => {
             e.preventDefault();
 
@@ -65,6 +67,7 @@ export const TicketButtons = ({ ticketId }: { ticketId: number }) => {
         onClose={() => setOpenCancel(false)}
       >
         <button
+          className="border-2 border-black rounded p-1"
           onClick={async (e) => {
             e.preventDefault();
             const createTransaction = await fetch("/api/transaction", {
@@ -79,6 +82,7 @@ export const TicketButtons = ({ ticketId }: { ticketId: number }) => {
           Sí, cancelar
         </button>
         <button
+          className="border-2 border-black rounded p-1"
           onClick={async (e) => {
             e.preventDefault();
 
