@@ -10,7 +10,7 @@ import { Transaction, Crypto, AdminPhone } from "@prisma/client";
 type PanelProps = {
   transactions: Transaction[];
   cryptos: Crypto[];
-  adminPhoneNumber: AdminPhone;
+  adminPhoneNumber: AdminPhone | null;
 };
 
 export function AdminPanel({
@@ -23,7 +23,9 @@ export function AdminPanel({
   const [showMessage, setShowMessage] = useState<boolean>(false);
 
   useEffect(() => {
-    setAdminPhone(adminPhoneNumber.phone);
+    if (adminPhoneNumber) {
+      setAdminPhone(adminPhoneNumber?.phone);
+    }
   }, [adminPhoneNumber]);
 
   // Show 'phone updated' message
@@ -107,10 +109,12 @@ export function AdminPanel({
           </button>
         </li>
       </ul>
-      {selected == "transactions" && (
+      {selected == "transactions" && transactions.length && (
         <TransactionsTable transactions={transactions} />
       )}
-      {selected == "cryptos" && <CryptosTable cryptos={cryptos} />}
+      {selected == "cryptos" && cryptos.length && (
+        <CryptosTable cryptos={cryptos} />
+      )}
     </section>
   );
 }
