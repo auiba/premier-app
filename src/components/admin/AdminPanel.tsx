@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react";
 import { TransactionsTable } from "./TransactionsTable";
 import { CryptosTable } from "./CryptosTable";
-import { fakeTransactions } from "../../../utils/backoffice";
-import { fakeCryptos } from "../../../utils/backoffice";
+
 import { TextInput } from "../registration/Input";
 import { Transaction, Crypto, AdminPhone } from "@prisma/client";
 
