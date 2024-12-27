@@ -16,7 +16,6 @@ export const RedirectFromClient = ({
   const router = useRouter();
 
   useEffect(() => {
-    console.log(time);
     const intervalId = window.setInterval(() => {
       if (time > 0) {
         setTime((prevTime) => prevTime - 1); // Update time every second

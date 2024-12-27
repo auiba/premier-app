@@ -7,8 +7,6 @@ export function SignIn({ text }: { text: string }) {
       action={async (formData) => {
         "use server";
 
-        console.log("USER EMAIL", formData.get("email"));
-
         await signIn("resend", {
           email: formData.get("email"),
           redirectTo: "/registrarse",

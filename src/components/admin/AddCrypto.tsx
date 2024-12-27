@@ -25,8 +25,6 @@ export const AddCrypto = ({
     setCryptoValues({ ...cryptoValues, cripto: e.target.value });
   };
 
-  console.log(cryptoValues);
-
   return (
     <div>
       <form className="flex flex-col items-center justify-center gap-2">

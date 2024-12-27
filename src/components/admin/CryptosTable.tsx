@@ -9,7 +9,9 @@ export const CryptosTable = ({ cryptos }: { cryptos: Crypto[] }) => {
   const [cryptosList, setCryptosList] = useState<Crypto[]>();
 
   useEffect(() => {
-    setCryptosList(cryptos);
+    if (cryptos.length) {
+      setCryptosList(cryptos);
+    }
   }, [cryptos]);
 
   const openModal = useCallback(() => {
@@ -34,7 +36,6 @@ export const CryptosTable = ({ cryptos }: { cryptos: Crypto[] }) => {
     comm: number;
     fee: number;
   }) => {
-    console.log("cryptodata =>", cryptoData);
     const addCrypto = await fetch("/api/admin/cryptos", {
       method: "POST",
       body: JSON.stringify(cryptoData),

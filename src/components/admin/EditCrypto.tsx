@@ -70,7 +70,6 @@ export const EditCrypto = ({
           className="rounded p-1 border-2 border-black"
           onClick={async (e) => {
             e.preventDefault();
-            console.log("kek");
 
             const editCrypto = await fetch("/api/admin/cryptos", {
               method: "PATCH",

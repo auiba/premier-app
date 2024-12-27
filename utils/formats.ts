@@ -3,7 +3,6 @@ export const base64ToBlob = async (base64Url: string) => {
   try {
     const response = await fetch(base64Url);
     const blobObj = await response.blob();
-    console.log(blobObj);
 
     return blobObj;
   } catch (err) {
