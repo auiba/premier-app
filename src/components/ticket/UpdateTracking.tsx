@@ -34,6 +34,7 @@ export const TrackingUrlUpdater = ({
         />
       </label>
       <button
+        className="p-1 rounded border-2 border-black mt-2 text-md"
         onClick={async (e) => {
           e.preventDefault();
           const updateUrl = await fetch("/api/transaction", {
@@ -56,7 +57,7 @@ export const TrackingUrlUpdater = ({
           showMessage ? "block" : "invisible"
         } text-green-600 text-md`}
       >
-        ✔ Teléfono actualizado
+        ✔ URL actualizada.
       </p>
     </form>
   );

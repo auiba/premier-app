@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { isTokenValid } from "../../../../utils/authHelpers";
 import { TrackingUrlUpdater } from "@/components/ticket/UpdateTracking";
+import { TicketButtons } from "@/components/ticket/Buttons";
 
 export default async function Page({
   params,
@@ -25,7 +26,7 @@ export default async function Page({
   if (tokenObj && isTokenValid(tokenObj)) {
     return (
       <section className="flex min-h-screen flex-col w-full items-center justify-between  bg-[#2b2b36] p-24 pt-4 lg:pt-12">
-        <div className="flex flex-col items-start gap-14  bg-white text-black py-10 rounded px-12">
+        <div className="flex flex-col items-start gap-8  bg-white text-black py-10 rounded px-12">
           <div className="flex gap-20 items-start justify-between uppercase">
             <div className="flex flex-col items-start justify-center font-medium">
               <p>Premier</p>
@@ -71,8 +72,11 @@ export default async function Page({
           </div>
           <TrackingUrlUpdater
             ticketId={ticketData?.id as number}
-            trackingUrl={ticketData?.trackingUrl || ""}
+            trackingUrl={ticketData?.trackingUrl || "Pegar url de seguimiento"}
           />
+
+          <TicketButtons ticketId={Number(ticketId)} />
+
           <div className="flex flex-col text-sm">
             <p>
               Atención al cliente (solo mensaje):{" "}
@@ -130,6 +134,22 @@ export default async function Page({
             ) : (
               ""
             )}
+          </div>
+          <div>
+            <span className="text-sm">URL de seguimiento:</span>
+            <a
+              href={
+                ticketData?.trackingUrl?.startsWith("http")
+                  ? ticketData.trackingUrl
+                  : `https://${ticketData?.trackingUrl}`
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <p className="text-lg font-medium">
+                {ticketData?.trackingUrl || "Esperando URL de seguimiento."}
+              </p>
+            </a>
           </div>
           <div className="flex flex-col text-sm">
             <p>
