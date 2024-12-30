@@ -76,6 +76,8 @@ export async function POST(req: NextRequest) {
       );
       const binanceData = await binanceReq.json().then((data) => data.price);
       console.log("binance data", binanceData);
+      console.log("Binance API status:", binanceReq.status);
+      console.log("Binance API response:", await binanceReq.text());
       const currencyPrice = 1 / parseFloat(binanceData);
 
       const stringResult = (currencyPrice * price).toString();
