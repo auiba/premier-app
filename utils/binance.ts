@@ -4,6 +4,6 @@ export async function getBinancePrice(from: string, to: string) {
   const symbol = from + to;
 
   const response = await fetch(
-    `https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`
+    `https://api.binance.us/api/v3/ticker/price?symbol=${symbol}`
   );
 }

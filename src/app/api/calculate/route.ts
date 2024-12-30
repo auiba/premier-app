@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     console.log(amount);
     try {
       const binanceReq = await fetch(
-        `https://api.binance.com/api/v3/ticker/price?symbol=${toUppercase}USDT`
+        `https://api.binance.us/api/v3/ticker/price?symbol=${toUppercase}USDT`
       );
       const binanceData = await binanceReq.json().then((data) => data.price);
       const currencyPrice = 1 / parseFloat(binanceData);
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
 
     try {
       const binanceReq = await fetch(
-        `https://api.binance.com/api/v3/ticker/price?symbol=${fromUpperCase}USDT`
+        `https://api.binance.us/api/v3/ticker/price?symbol=${fromUpperCase}USDT`
       );
       const binanceData = await binanceReq.json().then((data) => data.price);
 
@@ -72,23 +72,22 @@ export async function POST(req: NextRequest) {
   if (from === "usd") {
     try {
       const binanceReq = await fetch(
-        `https://api.binance.com/api/v3/ticker/price?symbol=${toUppercase}USDT`
+        `https://api.binance.us/api/v3/ticker/price?symbol=${toUppercase}USDT`
       );
       // console.log("binance data", binanceData);
-      console.log("Binance API status:", binanceReq.status);
-      console.log("Binance API response:", await binanceReq.text());
-      // const currencyPrice = 1 / parseFloat(binanceData);
       const binanceData = await binanceReq.json().then((data) => data.price);
 
-      // const stringResult = (currencyPrice * price).toString();
-      // console.log("string result", stringResult);
-      // // Maintain readable number
-      // const trimmedString: string =
-      //   stringResult.length > 10 ? stringResult.slice(0, 11) : stringResult;
+      const currencyPrice = 1 / parseFloat(binanceData);
 
-      // console.log("returning binance result...", trimmedString);
+      const stringResult = (currencyPrice * price).toString();
+      console.log("string result", stringResult);
+      // Maintain readable number
+      const trimmedString: string =
+        stringResult.length > 10 ? stringResult.slice(0, 11) : stringResult;
 
-      return NextResponse.json({ result: binanceData });
+      console.log("returning binance result...", trimmedString);
+
+      return NextResponse.json({ result: trimmedString });
     } catch (error) {
       console.error("error calculating from USD to a crypto", error);
       return NextResponse.error();
@@ -98,7 +97,7 @@ export async function POST(req: NextRequest) {
   if (to === "usd") {
     try {
       const binanceReq = await fetch(
-        `https://api.binance.com/api/v3/ticker/price?symbol=${fromUpperCase}USDT`
+        `https://api.binance.us/api/v3/ticker/price?symbol=${fromUpperCase}USDT`
       );
       const binanceData = await binanceReq.json().then((data) => data.price);
 
