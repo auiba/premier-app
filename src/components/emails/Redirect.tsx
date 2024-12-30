@@ -12,7 +12,7 @@ export const RedirectFromClient = ({
   email?: string;
   token?: string;
 }) => {
-  const [time, setTime] = useState<number>(10);
+  const [time, setTime] = useState<number>(6);
   const router = useRouter();
 
   useEffect(() => {
