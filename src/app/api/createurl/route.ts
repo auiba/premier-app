@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     console.log(amount);
     try {
       console.log("try calling service AGAIN...");
-      const ticket = await prisma.ticket.create({
+      const ticket = await prisma.transaction.create({
         data: {
           date: new Date(),
           email: email,
@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
           receiveCurrency: to,
           phone: phone,
           bankstring: bankstring,
+          confirmed: false,
         },
       });
 
@@ -62,7 +63,7 @@ export async function POST(req: NextRequest) {
   try {
     console.log("try calling service AGAIN...");
 
-    const ticket = await prisma.ticket.create({
+    const ticket = await prisma.transaction.create({
       data: {
         date: new Date(),
         email: email,
@@ -72,6 +73,7 @@ export async function POST(req: NextRequest) {
         receiveCurrency: to,
         phone: phone,
         bankstring: bankstring,
+        confirmed: false,
       },
     });
 

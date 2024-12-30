@@ -30,11 +30,11 @@ export const TicketButtons = ({ ticketId }: { ticketId: number }) => {
           className="border-2 border-black rounded p-1"
           onClick={async (e) => {
             e.preventDefault();
-            const createTransaction = await fetch("/api/transaction", {
-              method: "POST",
+            const updateTransaction = await fetch("/api/transaction", {
+              method: "PATCH",
               body: JSON.stringify({ ticketId }),
             });
-
+            router.refresh();
             setOpenConfirm(false);
           }}
         >
@@ -70,7 +70,7 @@ export const TicketButtons = ({ ticketId }: { ticketId: number }) => {
           className="border-2 border-black rounded p-1"
           onClick={async (e) => {
             e.preventDefault();
-            const createTransaction = await fetch("/api/transaction", {
+            const deleteTransaction = await fetch("/api/transaction", {
               method: "DELETE",
               body: JSON.stringify({ ticketId }),
             });

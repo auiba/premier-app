@@ -49,7 +49,7 @@ export default async function Page({
                 <li>
                   <p>Transacción: {ticketData?.id}</p>
                 </li>
-                <li className="flex flex-row items-center justify-center gap-2">
+                <li className="flex flex-row items-center  gap-2">
                   <p>Dirección: {ticketData?.bankstring}</p>
                   <CopyTextButton text={ticketData?.bankstring || ""} />
                 </li>
@@ -78,17 +78,113 @@ export default async function Page({
               ""
             )}
           </div>
-          <div className="flex flex-row items-center justify-center">
-            <TrackingUrlUpdater
-              ticketId={ticketData?.id as number}
-              trackingUrl={
-                ticketData?.trackingUrl || "Esperando url de seguimiento"
+
+          {ticketData?.confirmed ? (
+            <p className="text-md text-green-700">Transacción ya confirmada.</p>
+          ) : (
+            <>
+              <div className="flex flex-row items-center">
+                <TrackingUrlUpdater
+                  ticketId={ticketData?.id as number}
+                  trackingUrl={
+                    ticketData?.trackingUrl || "Esperando url de seguimiento"
+                  }
+                />
+              </div>
+
+              <TicketButtons ticketId={Number(ticketId)} />
+            </>
+          )}
+          <div className="flex flex-col text-sm">
+            <p>
+              Atención al cliente (solo mensaje):{" "}
+              <span className="font-semibold">1155837794</span>
+            </p>
+            <p>Sitio web: www.premier.com.ar</p>
+          </div>
+          <p className="self-center justify-self-center">GRACIAS</p>
+        </div>
+      </section>
+    );
+  } else {
+    return (
+      <section className="flex min-h-screen flex-col w-full items-center justify-between  bg-[#2b2b36] p-24 pt-4 lg:pt-12">
+        <div className="flex flex-col items-start gap-14  bg-white text-black py-10 rounded px-12">
+          <div className="flex gap-20 items-start justify-between uppercase">
+            <div className="flex flex-row items-center justify-center ">
+              <Image alt="logo" width={50} height={50} src={premierlogo} />
+              <div className="flex flex-col items-start justify-center font-medium">
+                <p className="font-bold text-lg">Premier</p>
+                <span className="text-[13px] font-bold"> Tecnologia</span>
+              </div>
+            </div>
+            <p>Compra de cripto</p>
+          </div>
+          <div>
+            {ticketData ? (
+              <ul className="flex flex-col gap-4">
+                <li>
+                  <p>Fecha: {formatedDate}</p>
+                </li>
+                <li>
+                  <p>Transacción: {ticketData?.id}</p>
+                </li>
+                <li className="flex flex-row items-center justify-center gap-2">
+                  <p>Dirección: {ticketData?.bankstring}</p>
+                  <CopyTextButton text={ticketData?.bankstring || ""} />
+                </li>
+                <li>
+                  <p>
+                    {" "}
+                    Tipo de cambio: {ticketData?.sendCurrency} a{" "}
+                    {ticketData?.receiveCurrency}
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    Importe: {ticketData?.send}
+                    {ticketData?.sendCurrency}
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    Cantidad: {ticketData?.receive}
+                    {ticketData?.receiveCurrency}{" "}
+                  </p>
+                </li>
+              </ul>
+            ) : (
+              ""
+            )}
+          </div>
+          <div className="flex flex-row gap-2 items-center">
+            <div>
+              <span className="text-sm">URL de seguimiento:</span>
+              <a
+                href={
+                  ticketData?.trackingUrl?.startsWith("http")
+                    ? ticketData.trackingUrl
+                    : `https://${ticketData?.trackingUrl}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <p className="text-lg font-medium">
+                  {ticketData?.trackingUrl || "Esperando URL de seguimiento."}
+                </p>
+              </a>
+            </div>
+            <CopyTextButton
+              text={
+                ticketData?.trackingUrl?.startsWith("http")
+                  ? ticketData.trackingUrl
+                  : `https://${ticketData?.trackingUrl}`
               }
             />
           </div>
-
-          <p className="text-md text-green-700">Transacción ya confirmada.</p>
-
+          {ticketData?.confirmed && (
+            <p className="text-md text-green-700">Transacción ya confirmada.</p>
+          )}
           <div className="flex flex-col text-sm">
             <p>
               Atención al cliente (solo mensaje):{" "}

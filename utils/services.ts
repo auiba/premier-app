@@ -68,7 +68,7 @@ export async function createUrl(
 ) {
   const textPrice = price.toString();
 
-  const message = `Va a solicitar pasar ${textPrice}${from} a ${to} y recibirá ${receive}${to}. ${baseUrl}ticket/${ticketId} `;
+  const message = `Va a solicitar pasar ${textPrice}${from} a ${to} y recibirá ${receive}${to}. ${baseUrl}transaction/${ticketId} `;
   const encodedMessage = encodeURIComponent(message);
 
   const wspBaseUrl = "https://wa.me/";

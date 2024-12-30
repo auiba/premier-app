@@ -1,4 +1,4 @@
-import { Ticket } from "@prisma/client";
+import { Transaction } from "@prisma/client";
 import prisma from "../../../../db";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -16,7 +16,7 @@ export default async function Page({
 }) {
   const ticketId = (await params).id;
 
-  const ticketData: Ticket | null = await prisma.ticket.findFirst({
+  const ticketData: Transaction | null = await prisma.transaction.findFirst({
     where: { id: Number(ticketId) },
   });
 
@@ -78,17 +78,23 @@ export default async function Page({
               ""
             )}
           </div>
-          <div className="flex flex-row items-center">
-            <TrackingUrlUpdater
-              ticketId={ticketData?.id as number}
-              trackingUrl={
-                ticketData?.trackingUrl || "Esperando url de seguimiento"
-              }
-            />
-          </div>
 
-          <TicketButtons ticketId={Number(ticketId)} />
+          {ticketData?.confirmed ? (
+            <p className="text-md text-green-700">Transacción ya confirmada.</p>
+          ) : (
+            <>
+              <div className="flex flex-row items-center">
+                <TrackingUrlUpdater
+                  ticketId={ticketData?.id as number}
+                  trackingUrl={
+                    ticketData?.trackingUrl || "Esperando url de seguimiento"
+                  }
+                />
+              </div>
 
+              <TicketButtons ticketId={Number(ticketId)} />
+            </>
+          )}
           <div className="flex flex-col text-sm">
             <p>
               Atención al cliente (solo mensaje):{" "}
@@ -175,6 +181,9 @@ export default async function Page({
               }
             />
           </div>
+          {ticketData?.confirmed && (
+            <p className="text-md text-green-700">Transacción ya confirmada.</p>
+          )}
           <div className="flex flex-col text-sm">
             <p>
               Atención al cliente (solo mensaje):{" "}
