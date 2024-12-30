@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { calculateExchange, getDollar } from "../../../../utils/services";
-
-const apiUrl = process.env.API_URL;
-const apiKey = process.env.API_SIGNATURE;
+import { getDollar } from "../../../../utils/services";
 
 export async function POST(req: NextRequest) {
   const { from, to, price } = await req.json();
@@ -78,12 +75,13 @@ export async function POST(req: NextRequest) {
         `https://api.binance.com/api/v3/ticker/price?symbol=${toUppercase}USDT`
       );
       const binanceData = await binanceReq.json().then((data) => data.price);
+      console.log("binance data", binanceData);
       const currencyPrice = 1 / parseFloat(binanceData);
 
       const stringResult = (currencyPrice * price).toString();
-
+      console.log("string result", stringResult);
       // Maintain readable number
-      const trimmedString =
+      const trimmedString: string =
         stringResult.length > 10 ? stringResult.slice(0, 11) : stringResult;
 
       console.log("returning binance result...", trimmedString);
