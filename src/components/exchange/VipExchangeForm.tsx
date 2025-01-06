@@ -39,10 +39,11 @@ export const VipExchangeForm = ({
   const [sendCurrency, setSendCurrency] = useState<string>(
     buying ? "usd" : "btc"
   );
-  const [receiveAmount, setReceiveAmount] = useState(0);
+  const [receiveAmount, setReceiveAmount] = useState<string>("");
   const [receivingCurrency, setReceivingCurrency] = useState(
     buying ? "btc" : "usd"
   );
+  const [activeInput, setActiveInput] = useState<"send" | "receive">("send");
   const [phone, setPhone] = useState<string>("");
   const [account, setAccount] = useState<string>("");
   const [cash, setCash] = useState<boolean>(false);
@@ -50,39 +51,40 @@ export const VipExchangeForm = ({
 
   const router = useRouter();
 
-  // Selected currency OR bitcoin if nothing has been selected
   const selectedCurrency = buying
     ? cryptos?.find(
         (crypto) => crypto.crypto == receivingCurrency.toUpperCase()
       )
     : cryptos?.find((crypto) => crypto.crypto == sendCurrency);
 
-  const resetAmount = () => {
-    setSendingAmount("");
-    setReceiveAmount(0);
-  };
-
-  const debouncedSearch = useCallback(
+  const calculateExchange = useCallback(
     debounce(
       async (
-        sendCurrency: string,
-        receivingCurrency: string,
-        value: string
+        from: string,
+        to: string,
+        amount: string,
+        direction: "send" | "receive"
       ) => {
         setLoading(true);
 
         const response = await fetch("/api/calculate", {
           method: "POST",
           body: JSON.stringify({
-            from: sendCurrency,
-            to: receivingCurrency,
-            price: value,
+            from,
+            to,
+            price: amount,
+            direction,
           }),
         });
 
         const data = await response.json();
         setLoading(false);
-        setReceiveAmount(data.result);
+
+        if (direction === "send") {
+          setReceiveAmount(data.result);
+        } else {
+          setSendingAmount(data.result);
+        }
       },
       300
     ),
@@ -90,24 +92,53 @@ export const VipExchangeForm = ({
   );
 
   useEffect(() => {
-    if (sendingAmount == "0" || sendingAmount == "") return;
-    setLoading(true);
-    debouncedSearch(sendCurrency, receivingCurrency, sendingAmount as string);
-    setLoading(false);
-  }, [sendingAmount]);
+    if (activeInput === "send") {
+      if (sendingAmount === "" || sendingAmount === "0") {
+        setReceiveAmount("");
+        return;
+      }
+      calculateExchange(sendCurrency, receivingCurrency, sendingAmount, "send");
+    }
+  }, [
+    sendingAmount,
+    activeInput,
+    sendCurrency,
+    receivingCurrency,
+    calculateExchange,
+  ]);
 
   useEffect(() => {
-    // When buying mode changes, enforce correct currencies
+    if (activeInput === "receive") {
+      if (receiveAmount === "" || receiveAmount === "0") {
+        setSendingAmount("");
+        return;
+      }
+      calculateExchange(
+        sendCurrency,
+        receivingCurrency,
+        receiveAmount,
+        "receive"
+      );
+    }
+  }, [
+    receiveAmount,
+    activeInput,
+    sendCurrency,
+    receivingCurrency,
+    calculateExchange,
+  ]);
+
+  useEffect(() => {
     if (buying) {
       setSendCurrency("usd");
       setReceivingCurrency("btc");
       setSendingAmount("");
-      setReceiveAmount(0);
+      setReceiveAmount("");
     } else {
       setSendCurrency("btc");
       setReceivingCurrency("usd");
       setSendingAmount("");
-      setReceiveAmount(0);
+      setReceiveAmount("");
     }
   }, [buying]);
 
@@ -115,22 +146,19 @@ export const VipExchangeForm = ({
   const cashRef = useRef<HTMLInputElement>(null);
 
   return (
-    <form
-      className="text-white items-center justify-center flex flex-col w-[375px] bg-[#343443] p-8 rounded border-[1px] border-gray-600"
-      action=""
-      onSubmit={(e) => e.preventDefault()}
-    >
+    <form className="text-white items-center justify-center flex flex-col w-[375px] bg-[#343443] p-8 rounded border-[1px] border-gray-600">
       <SendInput
         buying={buying}
-        resetAmount={resetAmount}
-        sending={sendingAmount as string}
+        sending={sendingAmount}
         sendCurrency={sendCurrency}
         cryptoCurrencies={cryptos}
         fiatCurrencies={fiatOptions}
         setReceivingCurrency={setReceivingCurrency}
         setSendingAmount={setSendingAmount}
         setSendingCurrency={setSendCurrency}
+        onFocus={() => setActiveInput("send")}
       />
+
       <div className="flex items-center justify-between w-full py-4">
         <div className="-ml-2">
           <ul className="text-[12px]">
@@ -138,13 +166,10 @@ export const VipExchangeForm = ({
               Comisión:{" "}
               {(selectedCurrency && selectedCurrency?.commission) || "5.00"}%
             </li>
-            {buying ? (
-              <li>
-                Fee de red: {selectedCurrency && selectedCurrency?.fee} USD
-              </li>
-            ) : (
-              <li>Fee de red: 0</li>
-            )}
+            <li>
+              Fee de red:{" "}
+              {buying ? selectedCurrency && selectedCurrency?.fee : "0"} USD
+            </li>
           </ul>
         </div>
 
@@ -181,11 +206,12 @@ export const VipExchangeForm = ({
         cryptoCurrencies={cryptos}
         fiatCurrencies={fiatOptions}
         sendCurrency={sendCurrency}
-        resetAmount={resetAmount}
         receivingCurrency={receivingCurrency}
         setReceivingCurrency={setReceivingCurrency}
         setSendingAmount={setSendingAmount}
+        setReceiveAmount={setReceiveAmount}
         setSendingCurrency={setSendCurrency}
+        onFocus={() => setActiveInput("receive")}
         loading={loading}
       />
 
@@ -204,7 +230,7 @@ export const VipExchangeForm = ({
       </label>
 
       <label
-        className={`${cash ? "opacity-10" : ""}  flex flex-col mt-4`}
+        className={`${cash ? "opacity-10" : ""} flex flex-col mt-4`}
         htmlFor="account"
       >
         {buying ? "Mi billetera de crypto" : "CBU/CVU/Alias para transferencia"}
@@ -217,9 +243,7 @@ export const VipExchangeForm = ({
           name="account"
           type="text"
           value={account !== "" ? account : ""}
-          onChange={(e) => {
-            setAccount(e.target.value);
-          }}
+          onChange={(e) => setAccount(e.target.value)}
         />
       </label>
 
@@ -235,9 +259,7 @@ export const VipExchangeForm = ({
             type="checkbox"
             name="cash"
             id="cash"
-            onChange={(e) => {
-              setCash(e.target.checked);
-            }}
+            onChange={(e) => setCash(e.target.checked)}
           />
           Efectivo
         </label>
@@ -254,10 +276,10 @@ export const VipExchangeForm = ({
               to: receivingCurrency,
               price: sendingAmount,
               receive: receiveAmount,
-              name: name,
-              email: email,
+              name,
+              email,
               bankstring: account,
-              phone: phone,
+              phone,
             }),
           });
 

@@ -22,11 +22,12 @@ export default async function ExchangePage() {
     where: { email: userEmail as string },
   });
 
-  console.log("customer data :", customerInfo);
-
-  if (customerInfo?.email !== userEmail) {
+  if (customerInfo?.email !== userEmail || !customerInfo) {
     redirect("/");
   }
+
+  console.log("customer data :", customerInfo);
+
   const formInfo = await Promise.allSettled([getDollar(), getAllConstants()]);
 
   const [dollarResult, allConstants] = formInfo;

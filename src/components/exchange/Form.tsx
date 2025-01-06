@@ -37,10 +37,11 @@ export const ExchangeForm = ({
   const [sendCurrency, setSendCurrency] = useState<string>(
     buying ? "usd" : "btc"
   );
-  const [receiveAmount, setReceiveAmount] = useState(0);
+  const [receiveAmount, setReceiveAmount] = useState<string>("");
   const [receivingCurrency, setReceivingCurrency] = useState(
     buying ? "btc" : "usd"
   );
+  const [activeInput, setActiveInput] = useState<"send" | "receive">("send");
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
@@ -63,68 +64,64 @@ export const ExchangeForm = ({
       )
     : cryptos?.find((crypto) => crypto.crypto == sendCurrency);
 
-  // console.log("selectedcurr", selectedCurrency);
-
-  const resetAmount = () => {
-    setSendingAmount("");
-    setReceiveAmount(0);
-  };
-
-  const debouncedSearch = useCallback(
+  const calculateExchange = useCallback(
     debounce(
       async (
-        sendCurrency: string,
-        receivingCurrency: string,
-        value: string
+        from: string,
+        to: string,
+        amount: string,
+        direction: "send" | "receive"
       ) => {
-        // async API service call here
-        // from, to , price (amount)
-        // set parent state to async call result
-
         setLoading(true);
 
         const response = await fetch("/api/calculate", {
           method: "POST",
           body: JSON.stringify({
-            from: sendCurrency,
-            to: receivingCurrency,
-            price: value,
+            from,
+            to,
+            price: amount,
+            direction,
           }),
         });
 
         const data = await response.json();
-
         setLoading(false);
-        // console.log(data.result);
-        setReceiveAmount(data.result);
+
+        if (direction === "send") {
+          setReceiveAmount(data.result);
+        } else {
+          setSendingAmount(data.result);
+        }
       },
       300
     ),
-
     []
   );
 
   useEffect(() => {
-    if (sendingAmount == "0" || sendingAmount == "") return;
-    setLoading(true);
-    debouncedSearch(sendCurrency, receivingCurrency, sendingAmount as string);
-    setLoading(false);
-  }, [sendingAmount]);
+    if (activeInput === "send") {
+      if (sendingAmount === "" || sendingAmount === "0") {
+        setReceiveAmount("");
+        return;
+      }
+      calculateExchange(sendCurrency, receivingCurrency, sendingAmount, "send");
+    }
+  }, [sendingAmount, activeInput]);
 
   useEffect(() => {
-    // When buying mode changes, enforce correct currencies
-    if (buying) {
-      setSendCurrency("usd");
-      setReceivingCurrency("btc");
-      setSendingAmount("");
-      setReceiveAmount(0);
-    } else {
-      setSendCurrency("btc");
-      setReceivingCurrency("usd");
-      setSendingAmount("");
-      setReceiveAmount(0);
+    if (activeInput === "receive") {
+      if (receiveAmount === "" || receiveAmount === "0") {
+        setSendingAmount("");
+        return;
+      }
+      calculateExchange(
+        sendCurrency,
+        receivingCurrency,
+        receiveAmount,
+        "receive"
+      );
     }
-  }, [buying]);
+  }, [receiveAmount, activeInput, sendCurrency, receivingCurrency]);
 
   const fiatOptions = ["usd", "ars"];
   const cryptoOptions =
@@ -140,14 +137,14 @@ export const ExchangeForm = ({
     >
       <SendInput
         buying={buying}
-        resetAmount={resetAmount}
-        sending={sendingAmount as string}
+        sending={sendingAmount}
         sendCurrency={sendCurrency}
         cryptoCurrencies={cryptos}
         fiatCurrencies={fiatOptions}
         setReceivingCurrency={setReceivingCurrency}
         setSendingAmount={setSendingAmount}
         setSendingCurrency={setSendCurrency}
+        onFocus={() => setActiveInput("send")}
       />
       <div className="flex items-center justify-between w-full py-4">
         <div className="-ml-2">
@@ -200,11 +197,12 @@ export const ExchangeForm = ({
         cryptoCurrencies={cryptos}
         fiatCurrencies={fiatOptions}
         sendCurrency={sendCurrency}
-        resetAmount={resetAmount}
         receivingCurrency={receivingCurrency}
+        setSendingAmount={setSendingAmount} // Added this prop
         setReceivingCurrency={setReceivingCurrency}
-        setSendingAmount={setSendingAmount}
+        setReceiveAmount={setReceiveAmount}
         setSendingCurrency={setSendCurrency}
+        onFocus={() => setActiveInput("receive")}
         loading={loading}
       />
       <label className="flex flex-col mt-4" htmlFor="name">

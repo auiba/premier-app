@@ -2,117 +2,82 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDollar } from "../../../../utils/services";
 
 export async function POST(req: NextRequest) {
-  const { from, to, price } = await req.json();
-  console.log("calling route!", from, to, price);
+  const { from, to, price, direction } = await req.json();
 
   if (!from || !to || !price) return NextResponse.error();
 
   const toUppercase = to.toUpperCase();
   const fromUpperCase = from.toUpperCase();
 
-  if (from === "ars") {
-    console.log("EN ARGS");
+  const trimResult = (result: string) =>
+    result.length > 10 ? result.slice(0, 11) : result;
+
+  // Handle ARS conversions
+  if (from === "ars" || to === "ars") {
     const dollarPrices = await getDollar();
+    const dollar = from === "ars" ? dollarPrices.venta : dollarPrices.compra;
 
-    const dollar: number = dollarPrices.venta;
-    const amount = Number(price) / dollar;
-    console.log(amount);
     try {
+      const cryptoCurrency = from === "ars" ? toUppercase : fromUpperCase;
       const binanceReq = await fetch(
-        `https://api.binance.us/api/v3/ticker/price?symbol=${toUppercase}USDT`
+        `https://api.binance.us/api/v3/ticker/price?symbol=${cryptoCurrency}USDT`
       );
-      const binanceData = await binanceReq.json().then((data) => data.price);
-      const currencyPrice = 1 / parseFloat(binanceData);
+      const binancePrice = await binanceReq
+        .json()
+        .then((data) => parseFloat(data.price));
 
-      console.log("calculate result =>", currencyPrice * amount);
-      const stringResult = (currencyPrice * amount).toString();
+      let result: string;
+      if (from === "ars") {
+        if (direction === "receive") {
+          result = (price * binancePrice * dollar).toString();
+        } else {
+          const usdAmount = Number(price) / dollar;
+          result = ((1 / binancePrice) * usdAmount).toString();
+        }
+      } else {
+        if (direction === "receive") {
+          result = ((1 / (binancePrice * dollar)) * price).toString();
+        } else {
+          result = (binancePrice * price * dollar).toString();
+        }
+      }
 
-      // Maintain readable number
-      const data =
-        stringResult.length > 10 ? stringResult.slice(0, 11) : stringResult;
-
-      return NextResponse.json({ result: data });
+      return NextResponse.json({ result: trimResult(result) });
     } catch (err) {
-      console.error(
-        "error calculating exchange from ars to usd to crypto",
-        err
-      );
+      console.error("Error calculating ARS exchange:", err);
       return NextResponse.error();
     }
   }
 
-  if (to === "ars") {
-    console.log("EN ARGS");
-    const dollarPrices = await getDollar();
+  // Handle USD/Crypto conversions
+  try {
+    const binanceReq = await fetch(
+      `https://api.binance.us/api/v3/ticker/price?symbol=${
+        from === "usd" ? toUppercase : fromUpperCase
+      }USDT`
+    );
+    const binancePrice = await binanceReq
+      .json()
+      .then((data) => parseFloat(data.price));
 
-    const dollar: number = dollarPrices.compra;
-
-    try {
-      const binanceReq = await fetch(
-        `https://api.binance.us/api/v3/ticker/price?symbol=${fromUpperCase}USDT`
-      );
-      const binanceData = await binanceReq.json().then((data) => data.price);
-
-      console.log("calculate result =>", binanceData * price);
-      const stringResult = (binanceData * price * dollar).toString();
-
-      // Maintain readable number
-      const data =
-        stringResult.length > 10 ? stringResult.slice(0, 11) : stringResult;
-
-      return NextResponse.json({ result: data });
-    } catch (err) {
-      console.error(
-        "error calculating exchange from ars to usd to crypto",
-        err
-      );
+    let result: string;
+    if (from === "usd") {
+      if (direction === "receive") {
+        result = (price * binancePrice).toString();
+      } else {
+        result = ((1 / binancePrice) * price).toString();
+      }
+    } else {
+      if (direction === "receive") {
+        result = ((1 / binancePrice) * price).toString();
+      } else {
+        result = (binancePrice * price).toString();
+      }
     }
-  }
 
-  if (from === "usd") {
-    try {
-      const binanceReq = await fetch(
-        `https://api.binance.us/api/v3/ticker/price?symbol=${toUppercase}USDT`
-      );
-      // console.log("binance data", binanceData);
-      const binanceData = await binanceReq.json().then((data) => data.price);
-
-      const currencyPrice = 1 / parseFloat(binanceData);
-
-      const stringResult = (currencyPrice * price).toString();
-      console.log("string result", stringResult);
-      // Maintain readable number
-      const trimmedString: string =
-        stringResult.length > 10 ? stringResult.slice(0, 11) : stringResult;
-
-      console.log("returning binance result...", trimmedString);
-
-      return NextResponse.json({ result: trimmedString });
-    } catch (error) {
-      console.error("error calculating from USD to a crypto", error);
-      return NextResponse.error();
-    }
-  }
-
-  if (to === "usd") {
-    try {
-      const binanceReq = await fetch(
-        `https://api.binance.us/api/v3/ticker/price?symbol=${fromUpperCase}USDT`
-      );
-      const binanceData = await binanceReq.json().then((data) => data.price);
-
-      const stringResult = (binanceData * price).toString();
-
-      // Maintain readable number
-      const trimmedString =
-        stringResult.length > 10 ? stringResult.slice(0, 11) : stringResult;
-
-      console.log("returning binance result...", trimmedString);
-
-      return NextResponse.json({ result: trimmedString });
-    } catch (error) {
-      console.error("error calculating from USD to a crypto", error);
-      return NextResponse.error();
-    }
+    return NextResponse.json({ result: trimResult(result) });
+  } catch (error) {
+    console.error("Error calculating USD/Crypto exchange:", error);
+    return NextResponse.error();
   }
 }

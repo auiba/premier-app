@@ -1,51 +1,41 @@
 "use client";
 
-import { ChangeEvent, Dispatch, SetStateAction, useCallback } from "react";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import Image from "next/image";
 import loadingGif from "../../../public/imgs/icons/loading.gif";
 import { Crypto } from "@prisma/client";
-
-// They receive display values from parent form
-// onChange they update the state of parent, which in turn
-// updates display value of the other input
-
-// FROM ==> USD, ARS
-// TO ==> BTC, ETH
-
-// Delayed search after 500ms from last keypress
 
 type ExchangeInput = {
   buying: boolean;
   cryptoCurrencies: Crypto[];
   fiatCurrencies: any[];
   sending?: string;
-  receive?: number;
+  receive?: string;
   sendCurrency?: string;
   receivingCurrency?: string;
   setSendingCurrency: Dispatch<SetStateAction<any>>;
   setReceivingCurrency: Dispatch<SetStateAction<any>>;
   setSendingAmount: Dispatch<SetStateAction<any>>;
-  resetAmount: Function;
+  setReceiveAmount?: Dispatch<SetStateAction<any>>;
+  onFocus?: () => void;
   loading?: boolean;
 };
 
+const numberRegex = /^$|^0$|^[1-9]\d*$|^[1-9]\d*\.\d*$|^0\.\d*$|^\.\d*$/;
+
 export const SendInput = ({
   buying,
-  resetAmount,
   sending,
   setSendingCurrency,
   setSendingAmount,
   sendCurrency,
   cryptoCurrencies,
   fiatCurrencies,
+  onFocus,
 }: ExchangeInput) => {
-  // ChangeEvent<HTMLInputElement>
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // Regex to allow empty string, "0", decimal numbers, and numbers starting with decimal point
-    const regex = /^$|^0$|^[1-9]\d*$|^[1-9]\d*\.\d*$|^0\.\d*$|^\.\d*$/;
-
-    if (regex.test(value)) {
+    if (numberRegex.test(value)) {
       setSendingAmount(value);
     }
   };
@@ -65,11 +55,12 @@ export const SendInput = ({
   return (
     <div className="flex flex-col gap-2">
       <h2 className="text-gray-400">Envías</h2>
-      <div className="flex py-2 items-center rounded justify-center w-[325px] border-[1px] h-16 border-gray-600  bg-[#3e3e59]">
+      <div className="flex py-2 items-center rounded justify-center w-[325px] border-[1px] h-16 border-gray-600 bg-[#3e3e59]">
         <label htmlFor="send">
           <input
             value={sending}
             placeholder="0"
+            onFocus={onFocus}
             onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
             className="text-white text-xl w-[200px] bg-[#3e3e59] h-10 p-2 rounded m-1"
             onChange={handleChange}
@@ -80,11 +71,10 @@ export const SendInput = ({
         </label>
         <select
           value={sendCurrency?.toLowerCase()}
-          className="p-2 text-white text-xl bg-[#36324a] border-[1px] rounded border-gray-600  h-16 w-32 uppercase -ml-[12px]"
+          className="p-2 text-white text-xl bg-[#36324a] border-[1px] rounded border-gray-600 h-16 w-32 uppercase -ml-[12px]"
           onChange={(e) => {
-            e.preventDefault();
-            resetAmount();
             setSendingCurrency(e.target.value.toLowerCase());
+            setSendingAmount("");
           }}
           name="send"
           id="send"
@@ -97,16 +87,23 @@ export const SendInput = ({
 };
 
 export const ReceiveInput = ({
-  resetAmount,
   buying,
   receive,
   setReceivingCurrency,
-  setSendingAmount,
+  setReceiveAmount,
   cryptoCurrencies,
   fiatCurrencies,
   receivingCurrency,
+  onFocus,
   loading,
 }: ExchangeInput) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (numberRegex.test(value)) {
+      setReceiveAmount?.(value);
+    }
+  };
+
   const options = !buying
     ? fiatCurrencies.map((curr, id) => (
         <option key={id} value={curr.toLowerCase()}>
@@ -123,20 +120,31 @@ export const ReceiveInput = ({
     <div className="flex flex-col text-white gap-2">
       <h2 className="text-gray-400">Recibes</h2>
       <div className="flex py-2 items-center rounded justify-center h-16 w-[325px] bg-[#3e3e59] border-[1px] border-gray-600">
-        <div className="text-white text-xl w-[225px] p-2 rounded m-1 bg-[#3e3e59]">
-          {loading ? (
+        {loading ? (
+          <div className="text-white text-xl w-[225px] p-2 rounded m-1 bg-[#3e3e59]">
             <Image unoptimized src={loadingGif} height={30} width={35} alt="" />
-          ) : (
-            receive
-          )}
-        </div>
+          </div>
+        ) : (
+          <label htmlFor="receive">
+            <input
+              value={receive}
+              placeholder="0"
+              onFocus={onFocus}
+              onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+              className="text-white text-xl w-[200px] bg-[#3e3e59] h-10 p-2 rounded m-1"
+              onChange={handleChange}
+              id="receive"
+              type="text"
+              name="receive"
+            />
+          </label>
+        )}
 
         <select
-          className="p-2 text-white text-xl bg-[#36324a]  border-[1px] rounded border-gray-600  h-16 w-[128px] uppercase -ml-[12px]"
+          className="p-2 text-white text-xl bg-[#36324a] border-[1px] rounded border-gray-600 h-16 w-[128px] uppercase -ml-[12px]"
           onChange={(e) => {
-            e.preventDefault();
-            resetAmount();
             setReceivingCurrency(e.target.value.toLowerCase());
+            setReceiveAmount?.("");
           }}
           name="receive"
           id="receive"
