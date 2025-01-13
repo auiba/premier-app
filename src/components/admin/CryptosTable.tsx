@@ -3,14 +3,18 @@ import { CryptoItem } from "./CryptoItem";
 import { Modal } from "../Modal";
 import { useState, useCallback, useEffect } from "react";
 import { AddCrypto } from "./AddCrypto";
+import { useCryptos } from "@/context/AdminCryptos";
 
-export const CryptosTable = ({ cryptos }: { cryptos: Crypto[] }) => {
+export const CryptosTable = ({ cryptosList }: { cryptosList: Crypto[] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [cryptosList, setCryptosList] = useState<Crypto[]>();
+  const { cryptos, addToCryptoList, updateCrypto, deleteCrypto, setCryptos } =
+    useCryptos();
 
   useEffect(() => {
     if (cryptos.length) {
-      setCryptosList(cryptos);
+      setCryptos(cryptos);
+    } else {
+      setCryptos(cryptosList);
     }
   }, [cryptos]);
 
@@ -27,7 +31,7 @@ export const CryptosTable = ({ cryptos }: { cryptos: Crypto[] }) => {
       method: "DELETE",
       body: JSON.stringify({ id }),
     });
-    setCryptosList((prev) => prev?.filter((crypto) => crypto.id !== id));
+    deleteCrypto(id);
   };
 
   const handleAdd = async (cryptoData: {
@@ -41,18 +45,14 @@ export const CryptosTable = ({ cryptos }: { cryptos: Crypto[] }) => {
       body: JSON.stringify(cryptoData),
     });
     const newCryptoData = await addCrypto.json();
-    setCryptosList([...cryptosList!, newCryptoData]);
+    addToCryptoList(newCryptoData);
   };
 
   const handleUpdate = (updatedCrypto: Crypto) => {
-    setCryptosList((prev) =>
-      prev?.map((crypto) =>
-        crypto.id === updatedCrypto.id ? updatedCrypto : crypto
-      )
-    );
+    updateCrypto(updatedCrypto);
   };
 
-  const cryptosListItems = cryptosList?.map((crypto, id) => (
+  const cryptosListItems = cryptos?.map((crypto, id) => (
     <CryptoItem
       onEdit={handleUpdate}
       onDelete={handleDelete}

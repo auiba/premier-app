@@ -43,6 +43,8 @@ export async function calculateExchange(
 export async function getAllConstants() {
   const cryptosFromDb = await prisma.crypto.findMany({});
 
+  console.log("cryptos from db =>", cryptosFromDb);
+
   return cryptosFromDb;
 }
 
