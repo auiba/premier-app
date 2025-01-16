@@ -4,6 +4,8 @@ import { DollarPrice } from "@/components/exchange/DollarPrice";
 import { Suspense } from "react";
 import LoadingSkeleton from "./loading";
 
+export const dynamic = "force-dynamic";
+
 export default async function ExchangePage() {
   const formInfo = await Promise.allSettled([getDollar(), getAllConstants()]);
 

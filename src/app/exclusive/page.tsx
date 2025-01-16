@@ -9,6 +9,8 @@ import { auth } from "../../../auth";
 import { redirect } from "next/navigation";
 import prisma from "../../../db";
 
+export const dynamic = "force-dynamic";
+
 const apiUrl = process.env.API_URL;
 const apiKey = process.env.API_SIGNATURE;
 
