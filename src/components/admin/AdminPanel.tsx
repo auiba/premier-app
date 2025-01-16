@@ -5,11 +5,8 @@ import { TransactionsTable } from "./TransactionsTable";
 import { CryptosTable } from "./CryptosTable";
 
 import { CryptosProvider } from "@/context/AdminCryptos";
-
 import { TextInput } from "../registration/Input";
 import { Transaction, Crypto, AdminPhone } from "@prisma/client";
-
-export const dynamic = "force-dynamic";
 
 type PanelProps = {
   transactions: Transaction[];

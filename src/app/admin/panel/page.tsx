@@ -1,6 +1,8 @@
 import { AdminPanel } from "@/components/admin/AdminPanel";
 import prisma from "../../../../db";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminPage() {
   // Grab all data necessary for the admin panel concurrently
   const [transactionsResult, cryptosResult, adminPhoneResult] =
