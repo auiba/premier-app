@@ -49,7 +49,7 @@ export default async function Page({
                 <li>
                   <p>Transacción: {ticketData?.id}</p>
                 </li>
-                <li className="flex flex-row items-center  gap-2">
+                <li className="flex flex-row items-center gap-2 max-w-[300px]">
                   <p>Dirección: {ticketData?.bankstring}</p>
                   <CopyTextButton text={ticketData?.bankstring || ""} />
                 </li>
@@ -83,7 +83,7 @@ export default async function Page({
             <p className="text-md text-green-700">Transacción ya confirmada.</p>
           ) : (
             <>
-              <div className="flex flex-row items-center">
+              <div className="flex flex-row items-center max-w-[350px]">
                 <TrackingUrlUpdater
                   ticketId={ticketData?.id as number}
                   trackingUrl={
@@ -126,10 +126,10 @@ export default async function Page({
                 <li>
                   <p>Fecha: {formatedDate}</p>
                 </li>
-                <li>
+                <li className="">
                   <p>Transacción: {ticketData?.id}</p>
                 </li>
-                <li className="flex flex-row items-center justify-center gap-2">
+                <li className="flex flex-row items-center justify-center gap-2 max-w-[300px]">
                   <p>Dirección: {ticketData?.bankstring}</p>
                   <CopyTextButton text={ticketData?.bankstring || ""} />
                 </li>

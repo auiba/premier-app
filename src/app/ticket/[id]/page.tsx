@@ -49,7 +49,7 @@ export default async function Page({
                 <li>
                   <p>Transacción: {ticketData?.id}</p>
                 </li>
-                <li className="flex flex-row items-center justify-center gap-2">
+                <li className="flex flex-row items-center justify-center gap-2 max-w-[350px]">
                   <p>Dirección: {ticketData?.bankstring}</p>
                   <CopyTextButton text={ticketData?.bankstring || ""} />
                 </li>
@@ -129,7 +129,7 @@ export default async function Page({
                 <li>
                   <p>Transacción: {ticketData?.id}</p>
                 </li>
-                <li>
+                <li className="max-w-[350px]">
                   <p>Dirección: {ticketData?.bankstring}</p>
                 </li>
                 <li>

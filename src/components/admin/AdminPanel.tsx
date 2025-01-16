@@ -63,6 +63,10 @@ export function AdminPanel({
                 body: JSON.stringify({ phone: adminPhone }),
               });
 
+              const phoneData = await updatePhone.json();
+
+              setAdminPhone(phoneData.phone);
+
               if (updatePhone.status == 200) {
                 flashMessage();
               }
