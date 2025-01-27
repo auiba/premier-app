@@ -49,8 +49,10 @@ export default async function Page({
                 <li>
                   <p>Transacción: {ticketData?.id}</p>
                 </li>
-                <li className="flex flex-row items-center gap-2 max-w-[300px]">
-                  <p>Dirección: {ticketData?.bankstring}</p>
+                <li className="flex flex-row items-center gap-2">
+                  <p className="overflow-x-scroll max-w-[300px]">
+                    Dirección: {ticketData?.bankstring}
+                  </p>
                   <CopyTextButton text={ticketData?.bankstring || ""} />
                 </li>
                 <li>
@@ -83,7 +85,7 @@ export default async function Page({
             <p className="text-md text-green-700">Transacción ya confirmada.</p>
           ) : (
             <>
-              <div className="flex flex-row items-center max-w-[350px]">
+              <div className="flex flex-row items-center max-w-[300px]">
                 <TrackingUrlUpdater
                   ticketId={ticketData?.id as number}
                   trackingUrl={
@@ -108,8 +110,8 @@ export default async function Page({
     );
   } else {
     return (
-      <section className="flex min-h-screen flex-col w-full items-center justify-between  bg-[#2b2b36] p-24 pt-4 lg:pt-12">
-        <div className="flex flex-col items-start gap-14  bg-white text-black py-10 rounded px-12">
+      <section className="flex min-h-screen flex-col w-full items-center justify-between  bg-[#2b2b36] md:p-24 pt-4 lg:pt-12">
+        <div className="flex flex-col items-start gap-14  bg-white text-black rounded p-10 ">
           <div className="flex gap-20 items-start justify-between uppercase">
             <div className="flex flex-row items-center justify-center ">
               <Image alt="logo" width={50} height={50} src={premierlogo} />
@@ -129,9 +131,11 @@ export default async function Page({
                 <li className="">
                   <p>Transacción: {ticketData?.id}</p>
                 </li>
-                <li className="flex flex-row items-center justify-center gap-2 max-w-[300px]">
-                  <p>Dirección: {ticketData?.bankstring}</p>
-                  <CopyTextButton text={ticketData?.bankstring || ""} />
+                <li className="flex flex-row items-center justify-center gap-2 ">
+                  <p className="overflow-x-scroll max-w-[200px] md:max-w-[300px]">
+                    Dirección: {ticketData?.bankstring}
+                  </p>
+                  <CopyTextButton text={ticketData.bankstring as string} />
                 </li>
                 <li>
                   <p>
@@ -158,7 +162,7 @@ export default async function Page({
             )}
           </div>
           <div className="flex flex-row gap-2 items-center">
-            <div>
+            <div className="">
               <span className="text-sm">URL de seguimiento:</span>
               <a
                 href={
@@ -168,8 +172,9 @@ export default async function Page({
                 }
                 target="_blank"
                 rel="noopener noreferrer"
+                className=""
               >
-                <p className="text-lg font-medium">
+                <p className="text-lg font-medium overflow-x-scroll max-w-[200px] md:max-w-[300px]">
                   {ticketData?.trackingUrl || "Esperando URL de seguimiento."}
                 </p>
               </a>
