@@ -43,7 +43,7 @@ export function AdminPanel({
 
   return (
     <CryptosProvider>
-      <section className="flex min-h-screen flex-col w-full items-center gap-10 bg-[#2b2b36] p-24 pt-4 lg:pt-12">
+      <section className="flex min-h-screen flex-col w-full items-center  bg-[#2b2b36]  lg:pt-12">
         <form className="flex flex-col gap-2">
           <TextInput
             htmlfor="adminPhone"
@@ -81,7 +81,7 @@ export function AdminPanel({
             ✔ Teléfono actualizado
           </p>
         </form>
-        <ul className="flex items-center justify-center gap-4">
+        <ul className="flex items-center justify-center gap-4 mb-4">
           <li
             className={`${
               selected === "transactions" &&

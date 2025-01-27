@@ -24,7 +24,7 @@ export const CryptoItem = ({
   }, []);
 
   return (
-    <ul className="flex items-center justify-around p-2 px-4 border-b-2 border-black w-[80%]">
+    <ul className="flex flex-col md:flex-row items-center justify-around gap-4 md:gap-0 p-2 px-4 border-b-2 border-black w-[80%]">
       <li>
         <p className="min-w-[200px] max-w-[225px]">{name}</p>
       </li>

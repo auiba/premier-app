@@ -33,19 +33,18 @@ export const TransactionItem = ({
   const dateString = date.toISOString().replace("T", " ").slice(0, 16);
 
   return (
-    <ul className="flex items-center justify-around p-2 px-4 border-b-2 border-black w-[80%]">
-      <li>
+    <ul className="flex flex-col gap-4 md:gap-0 md:flex-row items-start md:items-center justify-around p-2 px-4 border-b-2 border-black w-[80%]">
+      <li className="flex flex-row gap-2 items-center justify-center">
         <a
           className="px-2 h-8 border-[1px] border-gray-400 rounded"
           target="_blank"
           href={`/transaction/${id}`}
         >
-          <span className="text-sm text-gray-400  ">{id}</span>
+          <span className="text-sm text-gray-400 ">{id}</span>
         </a>
-      </li>
-      <li>
         <span className="text-sm text-gray-400">{dateString}</span>
       </li>
+
       <li>
         <p className="min-w-[200px] max-w-[225px]">{email}</p>
       </li>
